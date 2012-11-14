@@ -20,7 +20,8 @@ module Gridinit
                   xml.ThreadGroup_(guiclass: "ThreadGroupGui", testclass: "ThreadGroup", testname: "Thread Group", enabled: "true") {
                     properties(thread_group, xml)
                   }
-                  thread_group.transactions
+                  p thread_group.to_xml
+                  
                 end
               }
             }
