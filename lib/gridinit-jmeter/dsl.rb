@@ -27,8 +27,8 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
-      def threads(params={}, &block)
-        node = Gridinit::Jmeter::ThreadGroup.new(params)
+      def threads(num_threads=1, params={}, &block)
+        node = Gridinit::Jmeter::ThreadGroup.new(num_threads, params)
         @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
@@ -117,7 +117,7 @@ module Gridinit
       end
 
       def file(params={})
-        params[:file] ||= '/tmp/jmeter.jmx'
+        params[:file] ||= 'jmeter.jmx'
         File.open(params[:file], 'w') { |file| file.write(doc.to_xml(:indent => 2)) }
       end
 

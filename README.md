@@ -12,11 +12,26 @@ Install it yourself as:
 
 ## Usage
 
-A basic test plan
+*Gridinit::Jmeter* exposes easy-to-use domain specific language for fluent communication with [JMeter](http://jmeter.apache.org/). As the name of the gem suggests, it also includes API integration with [Gridinit](http://gridinit.com), a cloud based load testing service.
+
+To use the DSL, first let's require the gem:
 
 ```ruby
+require 'rubygems'
 require 'gridinit-jmeter'
+```
 
+Let's create a `test` and save the related `jmx` testplan to file, so we can edit/view it in JMeter.
+
+```ruby
+test do
+  threads 10 do
+    visit 'Google Search', 'http://google.com'
+  end
+end.jmx
+```
+
+```ruby
 test do
   random_timer delay: 5000, range: 5000
   threads num_threads: 10, loops: 10 do

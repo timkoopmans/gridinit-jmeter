@@ -5,7 +5,7 @@ require 'gridinit-jmeter'
 # at the end of your test plan definition.
 
 test do
-  threads num_threads: 10, loops: 10 do
+  threads 100 do
     random_timer delay: 5000, range: 5000
   
     transaction 'Dummy Scenario' do
