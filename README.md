@@ -37,6 +37,10 @@ test do
 end.jmx
 ```
 
+## Roadmap
+
+This is very much a work-in-progress. Future work is being sponsored by Gridinit.com. Get in touch with us if you'd like to be involved.
+
 ## Contributing
 
 1. Fork it

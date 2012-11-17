@@ -8,6 +8,7 @@ gem 'nokogiri'
 gem 'active_attr'
 gem 'activesupport'
 gem 'logger-colors'
+gem 'rest-client'
 
 group :test do
   gem 'rake'

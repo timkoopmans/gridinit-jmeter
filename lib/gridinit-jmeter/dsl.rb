@@ -13,9 +13,8 @@ module Gridinit
           </jmeterTestPlan>
         EOF
         node = Gridinit::Jmeter::TestPlan.new
-        @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children
-        @root.at_xpath("//TestPlan").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
-
+        @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children << hash_tree
+        
         variables(
           name: 'testguid', 
           value: '${__P(testguid,${__time(,)})}',
@@ -24,71 +23,98 @@ module Gridinit
 
       def variables(params={}, &block)
         node = Gridinit::Jmeter::UserDefinedVariable.new(params)
-        @root.at_xpath("//TestPlan/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//Arguments").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
-        self.instance_exec(&block) if block
-      end
-
-      def random_timer(params={}, &block)
-        node = Gridinit::Jmeter::GaussianRandomTimer.new(params)
-        @root.at_xpath("//TestPlan/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//GaussianRandomTimer").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def threads(params={}, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(params)
-        @root.at_xpath("//TestPlan/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//ThreadGroup").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def transaction(name="Transaction Contoller", params={}, &block)
         node = Gridinit::Jmeter::Transaction.new(name, params)
-        @root.at_xpath("//ThreadGroup[last()]/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//TransactionController[last()]").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        @root.at_xpath("//TransactionController[last()]/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//HTTPSamplerProxy[last()]").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def submit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'POST'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        @root.at_xpath("//TransactionController[last()]/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//HTTPSamplerProxy[last()]").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def extract(name="", regex="", params={}, &block)
         node = Gridinit::Jmeter::RegexExtractor.new(name, regex, params)
-        @root.at_xpath("//HTTPSamplerProxy[last()]/following-sibling::hashTree") << node.doc.children
-        @root.at_xpath("//RegexExtractor[last()]").add_next_sibling(Nokogiri::XML::Node.new("hashTree", @root))
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def random_timer(params={}, &block)
+        node = Gridinit::Jmeter::GaussianRandomTimer.new(params)
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def jmx(params={})
         file(params)
         puts doc.to_xml(:indent => 2)
+        logger.info "JMX saved to: #{params[:file]}"
       end
 
-      def local(params={})
+      def run(params={})
         file(params)
         `jmeter -n -t #{params[:file]} -j #{params.try(:log) || 'jmeter.log' } -l #{params.try(:jtl) || 'jmeter.jtl' }`
       end
 
       def grid(token, params={})
         file(params)
-        `curl -i -F name=attachment -F attachment=@#{params[:file]} http://gridinit.com/api?token=#{token}`
+        begin
+          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}", {
+            :name => 'attachment', 
+            :attachment => File.new("#{params[:file]}", 'rb'),
+            :multipart => true,
+            :content_type => 'application/octet-stream'
+          }
+          logger.info "Results at: #{JSON.parse(response)["results"]}" if response.code == 200
+        rescue => e
+          logger.fatal "There was an error: #{e.message}"
+        end
       end
       
       private
+
+      def hash_tree
+        Nokogiri::XML::Node.new("hashTree", @root)
+      end
+
+      def xpath_from(calling_method)
+        case calling_method.grep(/dsl/)[1][/`.*'/][1..-2]
+        when 'threads'
+          '//ThreadGroup[last()]/following-sibling::hashTree'
+        when 'transaction'
+          '//TransactionController[last()]/following-sibling::hashTree'
+        when 'visit'
+          '//HTTPSamplerProxy[last()]/following-sibling::hashTree'
+        when 'submit'
+          '//HTTPSamplerProxy[last()]/following-sibling::hashTree'
+        when 'extract'
+          '//RegexExtractor[last()]/following-sibling::hashTree'
+        when 'random_timer'
+          '//GaussianRandomTimer[last()]/following-sibling::hashTree'
+        else 
+          '//TestPlan/following-sibling::hashTree'
+        end
+      end
 
       def file(params={})
         params[:file] ||= '/tmp/jmeter.jmx'

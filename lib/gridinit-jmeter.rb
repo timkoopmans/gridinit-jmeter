@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'docile'
 require 'active_support/core_ext'
 require 'logger/colors'
+require 'rest_client'
 require 'cgi'
 
 require 'gridinit-jmeter/dsl'
