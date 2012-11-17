@@ -2,7 +2,7 @@ require 'nokogiri'
 require 'docile'
 require 'active_support/core_ext'
 require 'logger/colors'
-require 'tempfile'
+require 'cgi'
 
 require 'gridinit-jmeter/dsl'
 require 'gridinit-jmeter/version'

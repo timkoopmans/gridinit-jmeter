@@ -54,7 +54,7 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
-      def to_jmx(params={})
+      def jmx(params={})
         params[:file] ||= '/tmp/jmeter.jmx'
         File.open(params[:file], 'w') { |file| file.write(doc.to_xml(:indent => 2)) }
         puts doc.to_xml(:indent => 2)
@@ -65,7 +65,6 @@ module Gridinit
         File.open(params[:file], 'w') { |file| file.write(doc.to_xml(:indent => 2)) }
         `/usr/share/jmeter/bin/jmeter -n -t /tmp/jmeter.jmx -j /tmp/jmeter.log -l /tmp/jmeter.jtl`
       end
-
       
       private
 

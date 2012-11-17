@@ -1,6 +1,10 @@
 # Gridinit::Jmeter
 
-TODO: Write a gem description
+Tired of using the JMeter GUI or looking at hairy XML files?
+
+This gem lets you write test plans for JMeter in your favourite text editor, and optionally run them on gridinit.com
+
+[![Build Status](https://travis-ci.org/altentee/gridinit-jmeter)](https://travis-ci.org/altentee/gridinit-jmeter)
 
 ## Installation
 
