@@ -3,9 +3,9 @@ module Gridinit
 
     class HttpSampler
       attr_accessor :doc
-      def initialize(params={})
+      def initialize(name, url, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="#{name}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
@@ -25,10 +25,10 @@ module Gridinit
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           </HTTPSamplerProxy>
         EOF
-        parse_url(params) if params[:url]
-        parse_args(params) if params[:args]
+        parse_url(url, params) unless url.empty?
+        fill_in(params) if params[:fill_in]
         params.each do |name, value|
-          node = @doc.children.xpath("*[contains(@name,\"#{name.to_s}\")]")
+          node = @doc.children.xpath("//*[contains(@name,\"#{name.to_s}\")]")
           node.first.content = value unless node.empty? 
         end
       end
@@ -37,16 +37,15 @@ module Gridinit
         URI.parse(url).scheme.nil? ? URI.parse("http://#{url}") : URI.parse(url)   
       end
 
-      def parse_url(params)
-        uri             = parse_uri(params[:url])
+      def parse_url(url, params)
+        uri             = parse_uri(url)
         params[:domain] = uri.host
         params[:port]   = uri.port
         params[:path]   = uri.path
-        params.delete :url
       end
 
-      def parse_args(params)
-        params[:args].each do |name, value|
+      def fill_in(params)
+        params[:fill_in].each do |name, value|
           @doc.at_xpath('//collectionProp') << 
             Nokogiri::XML(<<-EOF.strip_heredoc).children
               <elementProp name="username" elementType="HTTPArgument">
@@ -58,6 +57,7 @@ module Gridinit
               </elementProp>
               EOF
         end
+        params.delete :fill_in
       end
 
     end  
