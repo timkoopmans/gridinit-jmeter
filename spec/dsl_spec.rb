@@ -18,8 +18,6 @@ describe "DSL" do
     test {}.should respond_to :submit
   end
 
-
-
   it "should output a test plan to stdout" do
     $stdout.should_receive(:puts).with(/jmeterTestPlan/i)
     test do
