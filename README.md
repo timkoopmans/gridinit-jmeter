@@ -6,15 +6,7 @@ This gem lets you write test plans for JMeter in your favourite text editor, and
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'gridinit-jmeter'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install it yourself as:
 
     $ gem install gridinit-jmeter
 
@@ -22,7 +14,7 @@ Or install it yourself as:
 
 A basic test plan
 
-```
+```ruby
 require 'gridinit-jmeter'
 
 test do
@@ -47,7 +39,7 @@ test do
     end
 
   end
-  
+
 end
 ```
 
