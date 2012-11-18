@@ -61,6 +61,8 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      alias_method :web_reg_save_param, :extract
+
       def random_timer(delay=0, range=0, &block)
         node = Gridinit::Jmeter::GaussianRandomTimer.new(delay, range)
         @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree

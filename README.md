@@ -35,7 +35,7 @@ end.jmx
 So in this example, we just created a test plan, with 10 threads, each of which visited the search page at Google. 
 
 ### Generating a JMeter Test Plan (JMX)
-Note also how we called the `.jmx` method of the test block. Calling this method will write the contents of the JMeter test plan to screen (stdout) and also to a file like this.
+Note also how we called the `jmx` method of the test. Calling this method will write the contents of the JMeter test plan to screen (stdout) and also to a file like this.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -212,6 +212,27 @@ random_timer 1000,5000
 ```
 
 ### Response Extractor
+
+You can use the `extractor` method to extract values from a server response using a regular expression. For laughs, this is aliased as the `web_reg_save_param` method.
+
+```ruby
+extract 'csrf-token', "content='(.+?)' name='csrf-token'"
+```
+
+This method takes 3 parameters: the extracted value name, the PCRE regular expression and an optional parameters hash. This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor). 
+
+```ruby
+extract 'csrf-token', "content='(.+?)' name='csrf-token'"
+extract 'JSESSIONID', 'value="(.+?)" name="JESSIONSID"'
+web_reg_save_param 'VIEWSTATE', 'value="(.+?)" name="VIEWSTATE"'
+extract 'username', 'value="(.+?)" name="username"', {
+  default: 'Tim Koopmans',
+  match_number: 1
+}
+extract 'shopping_item', 'id="(.+?)" name="book"', {
+  match_number: 0 # random
+}
+```
 
 ### Response Assertions
 
