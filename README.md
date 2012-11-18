@@ -2,7 +2,7 @@
 
 Tired of using the JMeter GUI or looking at hairy XML files?
 
-This gem lets you write test plans for JMeter in your favourite text editor, and optionally run them on gridinit.com
+This gem lets you write test plans for JMeter in your favourite text editor, and optionally run them on [Gridinit.com](http://gridinit.com). Here's some background on [why we think](http://www.slideshare.net/90kts/gridinit-jmeter) a DSL is necessary. 
 
 ## Installation
 
