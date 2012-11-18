@@ -10,7 +10,7 @@ Install it yourself as:
 
     $ gem install gridinit-jmeter
 
-## Usage
+## Basic Usage
 
 *Gridinit::Jmeter* exposes easy-to-use domain specific language for fluent communication with [JMeter](http://jmeter.apache.org/). As the name of the gem suggests, it also includes API integration with [Gridinit](http://gridinit.com), a cloud based load testing service.
 
@@ -98,27 +98,31 @@ end.run(
   jtl: 'results.jtl')
 ```
 
+### Running a JMeter Test Plan on Gridinit.com
+
+As the gem name implies, you can also execute JMeter test plans on Gridinit.com using our API. To do so, you require an account and API token. If you don't know your token, sign in to the Grid and [generate a new token](http://gridinit.com/api)
+
+![API Token](examples/api_token.png "Optional title")
+
+To execute the test on the Grid, call the `.grid` method on the test block and pass it the API token like this.
 
 ```ruby
-test do
-  random_timer delay: 5000, range: 5000
-  threads num_threads: 10, loops: 10 do
-    transaction 'Dummy Scenario' do
-      visit 'Home Page', 'http://127.0.0.1:4567/' do
-        extract 'csrf-token', "content='(.+?)' name='csrf-token'"
-      end
-   
-      submit 'Submit Form', 'http://127.0.0.1:4567/', {
-        fill_in: {
-          username: 'tim',
-          password: 'password',
-          'csrf-token' => '${csrf-token}'
-        }
-      }
-    end
-  end
-end.jmx
+test do  
+  threads 10 do
+    visit 'Google Search', 'http://google.com'  
+  end  
+end.grid('OxtZ-4v-v0koSz5Y0enEQQ')
 ```
+
+This will then provide you with a link to the live test results on the Grid like this.
+
+``` 
+Results at: http://prod.gridinit.com/shared?testguid=73608030311611e2962f123141011033&run_id=339&tags=jmeter&domain=google.com&cluster=54.251.48.129&status=running&view=
+```
+
+## Advanced Usage
+
+
 
 ## Roadmap
 
