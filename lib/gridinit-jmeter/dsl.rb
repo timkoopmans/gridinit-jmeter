@@ -73,7 +73,9 @@ module Gridinit
 
       def run(params={})
         file(params)
-        `jmeter -n -t #{params[:file]} -j #{params.try(:log) || 'jmeter.log' } -l #{params.try(:jtl) || 'jmeter.jtl' }`
+        logger.warn "Test executing locally"
+        `#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }`
+        logger.info "Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
       end
 
       def grid(token, params={})
