@@ -174,6 +174,26 @@ test do
 end
 ```
 
+### Cache
+
+You can use the `cache` method to define a Cache Manager:
+
+```ruby
+cache
+```
+
+This methods takes an optional parameters hash. This is based on the [HTTP Cache Manager](http://jmeter.apache.org/usermanual/component_reference.html#HTTP_Cache_Manager).
+
+```ruby
+test do
+  cache clear_each_iteration: false
+end
+
+test do
+  cache use_expires: true, clear_each_iteration: true
+end
+```
+
 ### Navigating
 
 You can use the `visit` method to navigate to pages:
