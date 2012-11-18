@@ -154,6 +154,26 @@ threads 100, {
 }
 ```
 
+### Cookies
+
+You can use the `cookies` method to define a Cookie Manager:
+
+```ruby
+cookies
+```
+
+This methods takes an optional parameters hash. This is based on the [HTTP Cookie Manager](http://jmeter.apache.org/usermanual/component_reference.html#HTTP_Cookie_Manager).
+
+```ruby
+test do
+  cookies clear_each_iteration: false
+end
+
+test do
+  cookies policy: 'rfc2109', clear_each_iteration: true
+end
+```
+
 ### Navigating
 
 You can use the `visit` method to navigate to pages:

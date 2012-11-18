@@ -27,6 +27,12 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def cookies(params={}, &block)
+        node = Gridinit::Jmeter::CookieManager.new(params)
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
       def threads(num_threads=1, params={}, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(num_threads, params)
         @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
