@@ -59,11 +59,13 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
-      def random_timer(params={}, &block)
-        node = Gridinit::Jmeter::GaussianRandomTimer.new(params)
+      def random_timer(delay=0, range=0, &block)
+        node = Gridinit::Jmeter::GaussianRandomTimer.new(delay, range)
         @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
+
+      alias_method :think_time, :random_timer
 
       def jmx(params={})
         file(params)

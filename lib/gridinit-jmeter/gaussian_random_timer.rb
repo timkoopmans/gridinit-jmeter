@@ -3,17 +3,13 @@ module Gridinit
 
     class GaussianRandomTimer
       attr_accessor :doc
-      def initialize(params={})
+      def initialize(delay, range)
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Think Time" enabled="true">
-            <stringProp name="ConstantTimer.delay"></stringProp>
-            <stringProp name="RandomTimer.range"></stringProp>
+            <stringProp name="ConstantTimer.delay">#{delay}</stringProp>
+            <stringProp name="RandomTimer.range">#{range}</stringProp>
           </GaussianRandomTimer>
         EOF
-        params.each do |name, value|
-          node = @doc.children.xpath("//*[contains(@name,\"#{name.to_s}\")]")
-          node.first.content = value unless node.empty? 
-        end
       end
     end 
 

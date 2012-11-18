@@ -6,10 +6,10 @@ require 'gridinit-jmeter'
 # specify the API token and optional endpoint for the Grid.
 
 test do
-  random_timer delay: 500, range: 500
+  random_timer 500,500
   threads 10, {loops: 10} do
     transaction 'Dummy Scenario' do
       visit 'Altentee', 'http://127.0.0.1:9200/'
     end
   end
-end.grid('abcd1234', {endpoint: '127.0.0.1:3000'})
+end.grid('4dy-zJLEIgpYkKe6p6JhSQ', {endpoint: '127.0.0.1:3000'})

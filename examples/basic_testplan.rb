@@ -6,16 +6,15 @@ require 'gridinit-jmeter'
 
 test do
   threads 100 do
-    random_timer delay: 5000, range: 5000
+    random_timer 5000,5000
   
     transaction 'Dummy Scenario' do
       visit 'Home Page', 'http://127.0.0.1:4567/' do
         extract 'csrf-token', "content='(.+?)' name='csrf-token'"
       end
 
-      random_timer delay: 5000, range: 5000
+      random_timer 3000
   
-   
       submit 'Submit Form', 'http://127.0.0.1:4567/', {
         fill_in: {
           username: 'tim',

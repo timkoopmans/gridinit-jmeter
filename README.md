@@ -102,8 +102,6 @@ end.run(
 
 As the gem name implies, you can also execute JMeter test plans on Gridinit.com using our API. To do so, you require an account and API token. If you don't know your token, sign in to the Grid and [generate a new token](http://gridinit.com/api)
 
-![API Token](examples/api_token.png "Optional title")
-
 To execute the test on the Grid, call the `.grid` method on the test block and pass it the API token like this.
 
 ```ruby
