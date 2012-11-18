@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gridinit-jmeter'
 
-base_url = 'http://127.0.0.1:4567'
-grid     = '127.0.0.1:3000'
+base_url = 'http://localhost:4567'
+endpoint = 'localhost:3000'
 
 test do
 
@@ -40,4 +40,4 @@ test do
   end
 
 # end.run(path: '/usr/share/jmeter/bin/')
-end.grid '4dy-zJLEIgpYkKe6p6JhSQ', { endpoint: grid }
+end.grid '4dy-zJLEIgpYkKe6p6JhSQ', { endpoint: endpoint }
