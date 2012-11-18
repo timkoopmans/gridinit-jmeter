@@ -53,6 +53,8 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      alias_method :post, :submit
+
       def extract(name="", regex="", params={}, &block)
         node = Gridinit::Jmeter::RegexExtractor.new(name, regex, params)
         @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
