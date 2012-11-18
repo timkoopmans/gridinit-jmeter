@@ -162,7 +162,7 @@ You can use the `visit` method to navigate to pages:
   visit 'Google Search', 'http://altentee.com'
 ```
 
-This method makes a single request and takes three parameters: the label, the URL and an optional parameters hash.
+This method makes a single request and takes 3 parameters: the label, the URL and an optional parameters hash.
 
 ```ruby
 visit 'Google Search', 'http://altentee.com'
@@ -192,9 +192,24 @@ submit 'Submit Form', 'http://altentee.com/', {
   }
 ```
 
-This method makes a single request and takes three parameters: the label, the URL and an optional parameters hash. The fill_in parameter lets you specify key/value pairs for form field parameters. You can also use the built in JMeter `${expression}` language to access run time variables extracted from previous responses.
+This method makes a single request and takes 3 parameters: the label, the URL and an optional parameters hash. The fill_in parameter lets you specify key/value pairs for form field parameters. You can also use the built in JMeter `${expression}` language to access run time variables extracted from previous responses.
 
 ### Think Time
+
+You can use the `think_time` method to insert pauses into the simulation. This method is aliased as `random_timer`.
+
+```ruby
+think_time 3000
+```
+
+This method takes 2 parameters: the constant delay, and an optional variable delay. Both are specified in milliseconds. This is based on the [Gaussian Random Timer](http://jmeter.apache.org/usermanual/component_reference.html#Gaussian_Random_Timer). This timer pauses each thread request for a random amount of time, with most of the time intervals ocurring near a particular value. The total delay is the sum of the Gaussian distributed value (with mean 0.0 and standard deviation 1.0) times the deviation value you specify, and the offset value.
+
+```ruby
+# constant delay of 3 seconds
+think_time 3000
+# constant delay of 1 seconds with variance up to 6 seconds.
+random_timer 1000,5000
+```
 
 ### Response Extractor
 
