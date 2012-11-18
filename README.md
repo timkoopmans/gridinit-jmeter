@@ -110,7 +110,7 @@ This will then provide you with a link to the live test results on the Grid like
 Results at: http://prod.gridinit.com/shared?testguid=73608030311611e2962f123141011033&run_id=339&tags=jmeter&domain=altentee.com&cluster=54.251.48.129&status=running&view=
 ```
 
-## DSL
+## Advanced Usage
 
 ### Blocks
 
@@ -159,7 +159,9 @@ threads 100, {
 You can use the `cookies` method to define a Cookie Manager:
 
 ```ruby
-cookies
+test do
+  cookies
+end
 ```
 
 This methods takes an optional parameters hash. This is based on the [HTTP Cookie Manager](http://jmeter.apache.org/usermanual/component_reference.html#HTTP_Cookie_Manager).
@@ -179,7 +181,9 @@ end
 You can use the `cache` method to define a Cache Manager:
 
 ```ruby
-cache
+test do
+  cache
+end
 ```
 
 This methods takes an optional parameters hash. This is based on the [HTTP Cache Manager](http://jmeter.apache.org/usermanual/component_reference.html#HTTP_Cache_Manager).
@@ -191,6 +195,24 @@ end
 
 test do
   cache use_expires: true, clear_each_iteration: true
+end
+```
+
+### Authorization
+
+You can use the `auth` method to define an Authorization Manager:
+
+```ruby
+test do
+  auth
+end
+```
+
+This methods takes an optional parameters hash. This is based on the [HTTP Authorization Manager](http://jmeter.apache.org/usermanual/component_reference.html#HTTP_Authorization_Manager).
+
+```ruby
+test do
+  auth url: '/', username: 'tim', password: 'secret', domain: 'altentee.com'
 end
 ```
 
