@@ -1,24 +1,43 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gridinit-jmeter'
 
+base_url = 'http://127.0.0.1:4567'
+grid     = '127.0.0.1:3000'
+
 test do
-  threads 100 do
-    random_timer 5000,5000
+
+  cache clear_each_iteration: true
+  cookies
   
-    transaction 'Dummy Scenario' do
-      visit 'Home Page', 'http://127.0.0.1:4567/' do
+  threads 100 do
+
+    random_timer 3000, 3000
+  
+    transaction 'First Visit', {parent: true} do
+      visit 'Home Page', "#{base_url}/" do
         extract 'csrf-token', "content='(.+?)' name='csrf-token'"
       end
+    end
 
-      think_time 3000
-  
-      submit 'Submit Form', 'http://127.0.0.1:4567/', {
+    transaction 'Login' do
+      submit 'Submit Form', "#{base_url}/login", {
         fill_in: {
           username: 'tim',
           password: 'password',
           'csrf-token' => '${csrf-token}'
         }
       }
+      think_time 1000
     end
+
+    transaction 'Check Mana' do
+      visit 'Rails Camp' , "#{base_url}/magic" do
+        assert "contains", "magic"
+        assert "not-contains", "unicorns"
+      end
+    end
+
   end
-end.run(path: '/usr/share/jmeter/bin/')
+
+# end.run(path: '/usr/share/jmeter/bin/')
+end.grid '4dy-zJLEIgpYkKe6p6JhSQ', { endpoint: grid }

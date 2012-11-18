@@ -253,7 +253,7 @@ random_timer 1000,5000
 
 ### Response Extractor
 
-You can use the `extract` method to extract values from a server response using a regular expression. For laughs, this is aliased as the `web_reg_save_param` method. This method is typically used inside a `visit` or `submit` block.
+You can use the `extract` method to extract values from a server response using a regular expression. This is aliased as the `web_reg_save_param` method. This method is typically used inside a `visit` or `submit` block.
 
 ```ruby
 extract 'csrf-token', "content='(.+?)' name='csrf-token'"
@@ -276,9 +276,9 @@ visit "Altentee", "http://altentee.com" do
 end
 ```
 
-### Response Assertions
+### Response Assertion
 
-You can use the `assert` method to extract values from a server response using a regular expression. For laughs, this is aliased as the `web_reg_find` method. This method is typically used inside a `visit` or `submit` block.
+You can use the `assert` method to extract values from a server response using a regular expression. This is aliased as the `web_reg_find` method. This method is typically used inside a `visit` or `submit` block.
 
 ```ruby
 visit "Altentee", "http://altentee.com" do

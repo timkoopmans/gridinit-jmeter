@@ -4,9 +4,17 @@ get '/' do
   haml :index
 end
 
-post '/' do
+post '/login' do
   logger.info params
   haml :index
+end
+
+get '/cookies' do
+  response.set_cookie("JSESSIONID", :value => "1337")
+end
+
+get '/magic' do
+  haml :magic
 end
 
 __END__
@@ -18,3 +26,6 @@ __END__
 
 @@ index
 %div.title Hello world.
+
+@@ magic
+%div.title Magic happens
