@@ -213,7 +213,7 @@ random_timer 1000,5000
 
 ### Response Extractor
 
-You can use the `extractor` method to extract values from a server response using a regular expression. For laughs, this is aliased as the `web_reg_save_param` method.
+You can use the `extract` method to extract values from a server response using a regular expression. For laughs, this is aliased as the `web_reg_save_param` method. This method is typically used inside a `visit` or `submit` block.
 
 ```ruby
 extract 'csrf-token', "content='(.+?)' name='csrf-token'"
@@ -222,19 +222,43 @@ extract 'csrf-token', "content='(.+?)' name='csrf-token'"
 This method takes 3 parameters: the extracted value name, the PCRE regular expression and an optional parameters hash. This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor). 
 
 ```ruby
-extract 'csrf-token', "content='(.+?)' name='csrf-token'"
-extract 'JSESSIONID', 'value="(.+?)" name="JESSIONSID"'
-web_reg_save_param 'VIEWSTATE', 'value="(.+?)" name="VIEWSTATE"'
-extract 'username', 'value="(.+?)" name="username"', {
-  default: 'Tim Koopmans',
-  match_number: 1
-}
-extract 'shopping_item', 'id="(.+?)" name="book"', {
-  match_number: 0 # random
-}
+visit "Altentee", "http://altentee.com" do
+  extract 'csrf-token', "content='(.+?)' name='csrf-token'"
+  extract 'JSESSIONID', 'value="(.+?)" name="JESSIONSID"'
+  web_reg_save_param 'VIEWSTATE', 'value="(.+?)" name="VIEWSTATE"'
+  extract 'username', 'value="(.+?)" name="username"', {
+    default: 'Tim Koopmans',
+    match_number: 1
+  }
+  extract 'shopping_item', 'id="(.+?)" name="book"', {
+    match_number: 0 # random
+  }
+end
 ```
 
 ### Response Assertions
+
+You can use the `assert` method to extract values from a server response using a regular expression. For laughs, this is aliased as the `web_reg_find` method. This method is typically used inside a `visit` or `submit` block.
+
+```ruby
+visit "Altentee", "http://altentee.com" do
+  assert "contains", "We test, tune and secure your site"
+end
+```
+
+
+This method takes 3 parameters: the matching rule, the test string, and an optional parameters hash. This is based on the [Response Assertion](http://jmeter.apache.org/usermanual/component_reference.html#Response_Assertion). 
+
+```ruby
+visit "Altentee", "http://altentee.com" do
+  assert "contains", "We test, tune and secure your site"
+  assert "not-contains", "We price gouge on cloud services"
+  assert "matches", "genius"
+  assert "not-matches", "fakers"
+  assert "contains", "magic"
+  assert "not-contains", "unicorns", {scope: 'all'}
+end
+```
 
 ## Roadmap
 

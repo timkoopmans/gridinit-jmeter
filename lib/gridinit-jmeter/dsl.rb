@@ -71,6 +71,14 @@ module Gridinit
 
       alias_method :think_time, :random_timer
 
+      def assert(match="contains", pattern="", params={}, &block)
+        node = Gridinit::Jmeter::ResponseAssertion.new(match, pattern, params)
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :web_reg_find, :assert
+
       def jmx(params={})
         file(params)
         puts doc.to_xml(:indent => 2)
