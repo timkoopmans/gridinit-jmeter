@@ -77,8 +77,10 @@ module Gridinit
 
       def run(params={})
         file(params)
-        logger.warn "Test executing locally"
-        `#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }`
+        logger.warn "Test executing locally ..."
+        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
+        logger.info cmd
+        `#{cmd}`
         logger.info "Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
       end
 
