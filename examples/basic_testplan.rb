@@ -39,5 +39,6 @@ test do
 
   end
 
+# end.jmx
 # end.run(path: '/usr/share/jmeter/bin/')
 end.grid '4dy-zJLEIgpYkKe6p6JhSQ', { endpoint: endpoint }
