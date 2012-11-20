@@ -1,4 +1,19 @@
 module Gridinit
+
+  def dsl_eval(dsl, &block)
+    block_context = eval("self", block.binding)
+    proxy_context = Gridinit::Jmeter::FallbackContextProxy.new(dsl, block_context)
+    begin
+      block_context.instance_variables.each { |ivar| proxy_context.instance_variable_set(ivar, block_context.instance_variable_get(ivar)) }
+      proxy_context.instance_eval(&block)
+    ensure
+      block_context.instance_variables.each { |ivar| block_context.instance_variable_set(ivar, proxy_context.instance_variable_get(ivar)) }
+    end
+    dsl
+  end
+  
+  module_function :dsl_eval
+
   module Jmeter
 
     class DSL
@@ -173,5 +188,5 @@ module Gridinit
 end
 
 def test(&block)
-  Docile.dsl_eval(Gridinit::Jmeter::DSL.new, &block)
+  Gridinit.dsl_eval(Gridinit::Jmeter::DSL.new, &block)
 end

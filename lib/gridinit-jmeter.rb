@@ -1,11 +1,11 @@
 require 'nokogiri'
-require 'docile'
 require 'active_support/core_ext'
 require 'logger/colors'
 require 'rest_client'
 require 'cgi'
 
 require 'gridinit-jmeter/dsl'
+require 'gridinit-jmeter/fallback_content_proxy'
 require 'gridinit-jmeter/version'
 require 'gridinit-jmeter/test_plan'
 require 'gridinit-jmeter/auth_manager'
