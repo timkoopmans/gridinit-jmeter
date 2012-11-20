@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'rest_client'
+require 'json'
 require 'cgi'
 
 require 'gridinit-jmeter/dsl'
