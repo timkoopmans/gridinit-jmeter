@@ -11,7 +11,7 @@ module Gridinit
     end
     dsl
   end
-  
+
   module_function :dsl_eval
 
   module Jmeter
@@ -128,6 +128,7 @@ module Gridinit
       end
 
       def grid(token, params={})
+        RestClient.proxy = params[:proxy] if params[:proxy]
         file(params)
         begin
           response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}", {
