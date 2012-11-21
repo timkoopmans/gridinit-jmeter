@@ -6,6 +6,10 @@ gemspec
 gem 'nokogiri'
 gem 'rest-client'
 
+platforms :jruby do
+  gem 'json-jruby'
+end
+
 group :test do
   gem 'rake'
   gem 'rspec'

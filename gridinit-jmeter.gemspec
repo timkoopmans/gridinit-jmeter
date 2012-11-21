@@ -11,11 +11,12 @@ Gem::Specification.new do |gem|
   gem.description   = %q{This is a Ruby based DSL for writing JMeter test plans}
   gem.summary       = %q{This is a Ruby based DSL for writing JMeter test plans}
   gem.homepage      = ""
-  gem.add_dependency("rest-client", "~> 1.6.7")
-  gem.add_dependency("nokogiri",    "~> 1.5.5")
+  gem.add_dependency("rest-client")
+  gem.add_dependency("nokogiri")
+  gem.add_runtime_dependency('json-jruby') if RUBY_PLATFORM == 'java'
 
   gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.executables   << 'grid'
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 end
