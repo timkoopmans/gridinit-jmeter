@@ -112,6 +112,10 @@ module Gridinit
 
       alias_method :web_reg_find, :assert
 
+      def out(params={})
+        puts doc.to_xml(:indent => 2)
+      end
+      
       def jmx(params={})
         file(params)
         puts doc.to_xml(:indent => 2)
