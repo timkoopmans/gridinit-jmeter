@@ -115,10 +115,9 @@ module Gridinit
       def out(params={})
         puts doc.to_xml(:indent => 2)
       end
-      
+
       def jmx(params={})
         file(params)
-        puts doc.to_xml(:indent => 2)
         logger.info "JMX saved to: #{params[:file]}"
       end
 
@@ -132,11 +131,14 @@ module Gridinit
       end
 
       def grid(token, params={})
-        file(params)
         begin
-          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}", {
+          file = Tempfile.new('jmeter')
+          file.write(doc.to_xml(:indent => 2))
+          file.rewind
+          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}", 
+          {
             :name => 'attachment', 
-            :attachment => File.new("#{params[:file]}", 'rb'),
+            :attachment => File.new("#{file.path}", 'rb'),
             :multipart => true,
             :content_type => 'application/octet-stream'
           }
@@ -192,5 +194,7 @@ module Gridinit
 end
 
 def test(&block)
-  Gridinit.dsl_eval(Gridinit::Jmeter::DSL.new, &block)
+  t = Gridinit.dsl_eval(Gridinit::Jmeter::DSL.new, &block)
+  t.out
+  t
 end
