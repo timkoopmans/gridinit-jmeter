@@ -11,7 +11,7 @@ module Gridinit
     end
     dsl
   end
-  
+
   module_function :dsl_eval
 
   module Jmeter
@@ -131,6 +131,7 @@ module Gridinit
       end
 
       def grid(token, params={})
+        RestClient.proxy = params[:proxy] if params[:proxy]
         begin
           file = Tempfile.new('jmeter')
           file.write(doc.to_xml(:indent => 2))
