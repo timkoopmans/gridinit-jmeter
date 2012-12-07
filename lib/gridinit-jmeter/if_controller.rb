@@ -1,13 +1,14 @@
 module Gridinit
   module Jmeter
 
-    class Transaction
+    class IfController
       attr_accessor :doc
       def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="#{name}" enabled="true">
-            <boolProp name="TransactionController.parent">true</boolProp>
-          </TransactionController>
+          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="#{name}" enabled="true">
+            <stringProp name="IfController.condition">/stringProp>
+            <boolProp name="IfController.evaluateAll">false</boolProp>
+          </IfController>
         EOF
         params.each do |name, value|
           node = @doc.children.xpath("//*[contains(@name,\"#{name.to_s}\")]")

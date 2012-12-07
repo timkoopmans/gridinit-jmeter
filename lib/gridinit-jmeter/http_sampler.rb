@@ -40,11 +40,15 @@ module Gridinit
       end
 
       def parse_url(url, params)
-        uri               = parse_uri(url)
-        params[:protocol] = uri.scheme
-        params[:domain]   = uri.host
-        params[:port]     = uri.port
-        params[:path]     = uri.path
+        if url[0] == '$'
+          params[:path] = url # special case for named expressions
+        else 
+          uri               = parse_uri(url)
+          params[:protocol] = uri.scheme
+          params[:domain]   = uri.host
+          params[:port]     = uri.port
+          params[:path]     = uri.path
+        end
       end
 
       def fill_in(params)

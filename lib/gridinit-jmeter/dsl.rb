@@ -38,51 +38,70 @@ module Gridinit
 
       def variables(params={}, &block)
         node = Gridinit::Jmeter::UserDefinedVariable.new(params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def defaults(params={}, &block)
+        node = Gridinit::Jmeter::RequestDefaults.new(params)
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def cookies(params={}, &block)
         node = Gridinit::Jmeter::CookieManager.new(params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def cache(params={}, &block)
         node = Gridinit::Jmeter::CacheManager.new(params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def auth(params={}, &block)
         node = Gridinit::Jmeter::AuthManager.new(params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def threads(num_threads=1, params={}, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(num_threads, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def transaction(name="Transaction Contoller", params={}, &block)
         node = Gridinit::Jmeter::Transaction.new(name, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def exists(var, params={}, &block)
+        params[:condition] = "'${#{var}}'.length > 0"
+        node = Gridinit::Jmeter::IfController.new("if #{var}", params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def once(name="do once", params={}, &block)
+        node = Gridinit::Jmeter::OnceOnly.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
       def submit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'POST'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
@@ -90,7 +109,7 @@ module Gridinit
 
       def extract(name="", regex="", params={}, &block)
         node = Gridinit::Jmeter::RegexExtractor.new(name, regex, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
@@ -98,7 +117,7 @@ module Gridinit
 
       def random_timer(delay=0, range=0, &block)
         node = Gridinit::Jmeter::GaussianRandomTimer.new(delay, range)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
@@ -106,7 +125,7 @@ module Gridinit
 
       def assert(match="contains", pattern="", params={}, &block)
         node = Gridinit::Jmeter::ResponseAssertion.new(match, pattern, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
@@ -155,20 +174,30 @@ module Gridinit
         Nokogiri::XML::Node.new("hashTree", @root)
       end
 
+      def last_node_from(calling_method)
+        xpath = xpath_from(calling_method)
+        node  = @root.xpath(xpath).last
+        node
+      end
+
       def xpath_from(calling_method)
         case calling_method.grep(/dsl/)[1][/`.*'/][1..-2]
         when 'threads'
-          '//ThreadGroup[last()]/following-sibling::hashTree'
+          '//ThreadGroup/following-sibling::hashTree'
         when 'transaction'
-          '//TransactionController[last()]/following-sibling::hashTree'
+          '//TransactionController/following-sibling::hashTree'
+        when 'once'
+          '//OnceOnlyController/following-sibling::hashTree'
+        when 'exists'
+          '//IfController/following-sibling::hashTree'
         when 'visit'
-          '//HTTPSamplerProxy[last()]/following-sibling::hashTree'
+          '//HTTPSamplerProxy/following-sibling::hashTree'
         when 'submit'
-          '//HTTPSamplerProxy[last()]/following-sibling::hashTree'
+          '//HTTPSamplerProxy/following-sibling::hashTree'
         when 'extract'
-          '//RegexExtractor[last()]/following-sibling::hashTree'
+          '//RegexExtractor/following-sibling::hashTree'
         when 'random_timer'
-          '//GaussianRandomTimer[last()]/following-sibling::hashTree'
+          '//GaussianRandomTimer/following-sibling::hashTree'
         else 
           '//TestPlan/following-sibling::hashTree'
         end

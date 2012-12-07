@@ -1,13 +1,12 @@
 module Gridinit
   module Jmeter
 
-    class Transaction
+    class OnceOnly
       attr_accessor :doc
       def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="#{name}" enabled="true">
-            <boolProp name="TransactionController.parent">true</boolProp>
-          </TransactionController>
+          <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="#{name}" enabled="true">
+          </OnceOnlyController>
         EOF
         params.each do |name, value|
           node = @doc.children.xpath("//*[contains(@name,\"#{name.to_s}\")]")
