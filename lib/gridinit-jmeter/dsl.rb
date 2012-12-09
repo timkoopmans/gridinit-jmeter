@@ -113,6 +113,12 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def xpath_extract(name="", xpath="", params={}, &block)
+        node = Gridinit::Jmeter::XpathExtractor.new(name, xpath, params)
+        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
       alias_method :web_reg_save_param, :extract
 
       def random_timer(delay=0, range=0, &block)
