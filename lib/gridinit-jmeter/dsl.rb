@@ -115,7 +115,7 @@ module Gridinit
 
       def xpath_extract(name="", xpath="", params={}, &block)
         node = Gridinit::Jmeter::XpathExtractor.new(name, xpath, params)
-        @root.at_xpath(xpath_from(caller)) << node.doc.children << hash_tree
+        last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
 
