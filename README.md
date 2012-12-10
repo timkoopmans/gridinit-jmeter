@@ -281,7 +281,17 @@ You can use the `extract` method to extract values from a server response using 
 extract 'csrf-token', "content='(.+?)' name='csrf-token'"
 ```
 
-This method takes 3 parameters: the extracted value name, the PCRE regular expression and an optional parameters hash. This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor). 
+This method takes 4 parameters: the selector (xpath or regex), the extracted value name, the PCRE regular expression and an optional parameters hash. This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor). 
+
+The selector is optional and defaults to regex. You can specify regex or xpath extractors as follows.
+
+```
+visit 'Google', "http://google.com/" do
+  extract 'button_text', 'aria-label="(.+?)"'
+  extract :regex, 'button_text', 'aria-label="(.+?)"'
+  extract :xpath, 'button', '//buton'
+end
+```
 
 ```ruby
 visit "Altentee", "http://altentee.com" do
