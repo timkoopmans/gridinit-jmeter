@@ -5,7 +5,7 @@ module Gridinit
       attr_accessor :doc
       def initialize(name, regex, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="#{name}" enabled="true">
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">#{name}</stringProp>
             <stringProp name="RegexExtractor.regex">#{CGI.escapeHTML regex}</stringProp>

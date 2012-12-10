@@ -107,14 +107,15 @@ module Gridinit
 
       alias_method :post, :submit
 
-      def extract(name="", regex="", params={}, &block)
-        node = Gridinit::Jmeter::RegexExtractor.new(name, regex, params)
-        last_node_from(caller) << node.doc.children << hash_tree
-        self.instance_exec(&block) if block
-      end
-
-      def xpath_extract(name="", xpath="", params={}, &block)
-        node = Gridinit::Jmeter::XpathExtractor.new(name, xpath, params)
+      def extract(*args, &block)
+        node = case args.first
+        when :regex
+          Gridinit::Jmeter::RegexExtractor.new(*args.last(2))
+        when :xpath
+          Gridinit::Jmeter::XpathExtractor.new(*args.last(2))
+        else
+          Gridinit::Jmeter::RegexExtractor.new(*args)
+        end
         last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end

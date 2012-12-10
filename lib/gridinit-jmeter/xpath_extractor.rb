@@ -5,7 +5,7 @@ module Gridinit
       attr_accessor :doc
       def initialize(name, xpath, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="Xpath Expression Extractor" enabled="true">
+          <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="#{name}" enabled="true">
             <stringProp name="XPathExtractor.default"></stringProp>
             <stringProp name="XPathExtractor.refname">#{name}</stringProp>
             <stringProp name="XPathExtractor.xpathQuery">#{xpath}</stringProp>
