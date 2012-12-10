@@ -8,7 +8,7 @@ test do
     visit 'Google', "http://google.com/" do
       extract 'button_text', 'aria-label="(.+?)"'
       extract :regex, 'button_text', 'aria-label="(.+?)"'
-      extract :xpath, 'button', '//buton'
+      extract :xpath, 'button', '//button'
     end
 
   end
