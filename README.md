@@ -239,6 +239,10 @@ visit 'Google Search', 'http://altentee.com', {
   connect_timeout: '1000',
   response_timeout: '60000',
 }
+visit 'View Login', '/login', {
+  protocol: "https",
+  port: 443
+}
 ```
 
 ### Submitting a Form
