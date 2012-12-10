@@ -295,7 +295,7 @@ visit 'Google', "http://google.com/" do
 end
 ```
 
-This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor) and [XPath Exractor](http://jmeter.apache.org/usermanual/component_reference.html#XPath_Extractor)
+This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor) and [XPath Extractor](http://jmeter.apache.org/usermanual/component_reference.html#XPath_Extractor)
 
 ```ruby
 visit "Altentee", "http://altentee.com" do
