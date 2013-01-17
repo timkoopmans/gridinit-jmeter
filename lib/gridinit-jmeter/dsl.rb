@@ -174,6 +174,24 @@ module Gridinit
           logger.fatal "There was an error: #{e.message}"
         end
       end
+
+      def table_visualizer(name="", params={}, &block)
+        node = Gridinit::Jmeter::TableVisualizer.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def graph_visualizer(name="", params={}, &block)
+        node = Gridinit::Jmeter::GraphVisualizer.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def summary_report(name="", params={}, &block)
+        node = Gridinit::Jmeter::SummaryReport.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
       
       private
 
