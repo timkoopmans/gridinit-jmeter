@@ -8,4 +8,4 @@ test do
       visit 'Altentee', 'http://127.0.0.1:9200/'
     end
   end
-end.grid('4dy-zJLEIgpYkKe6p6JhSQ', {endpoint: '127.0.0.1:3000'})
+end.grid('4dy-zJLEIgpYkKe6p6JhSQ', {endpoint: '127.0.0.1:3000', region: 'ap_southeast_1'})

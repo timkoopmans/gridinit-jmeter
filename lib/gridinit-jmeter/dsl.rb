@@ -162,7 +162,7 @@ module Gridinit
           file = Tempfile.new('jmeter')
           file.write(doc.to_xml(:indent => 2))
           file.rewind
-          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}", 
+          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
           {
             :name => 'attachment', 
             :attachment => File.new("#{file.path}", 'rb'),
