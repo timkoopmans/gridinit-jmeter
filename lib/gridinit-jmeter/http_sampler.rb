@@ -29,6 +29,10 @@ module Gridinit
         EOF
         parse_url(url, params) unless url.empty?
         fill_in(params) if params[:fill_in]
+        params[:query] && params[:query].split('&').each do |param| 
+          name,value = param.split('=')
+          fill_in({ fill_in: { "#{name}" => value }, always_encode: params[:always_encode] }) 
+        end
         params.each do |name, value|
           node = @doc.children.xpath("//*[contains(@name,\"#{name.to_s}\")]")
           node.first.content = value unless node.empty? 
@@ -48,6 +52,7 @@ module Gridinit
           params[:domain]   ||= uri.host
           params[:port]     ||= uri.port
           params[:path]     ||= uri.path
+          params[:query]    ||= uri.query
         end
       end
 
@@ -55,8 +60,8 @@ module Gridinit
         params[:fill_in].each do |name, value|
           @doc.at_xpath('//collectionProp') << 
             Nokogiri::XML(<<-EOF.strip_heredoc).children
-              <elementProp name="username" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+              <elementProp name="#{name}" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">#{params[:always_encode] ? 'true' : false}</boolProp>
                 <stringProp name="Argument.value">#{value}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
