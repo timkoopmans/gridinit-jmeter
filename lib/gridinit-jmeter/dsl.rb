@@ -181,6 +181,14 @@ module Gridinit
         end
       end
 
+      def view_results_full_visualizer(name="", params={}, &block)
+        node = Gridinit::Jmeter::ViewResultsFullVisualizer.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :view_results, :view_results_full_visualizer
+
       def table_visualizer(name="", params={}, &block)
         node = Gridinit::Jmeter::TableVisualizer.new(name, params)
         last_node_from(caller) << node.doc.children << hash_tree
