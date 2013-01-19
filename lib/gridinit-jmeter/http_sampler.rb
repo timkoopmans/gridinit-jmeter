@@ -41,7 +41,7 @@ module Gridinit
       end
 
       def parse_uri(url)
-        URI.parse(url).scheme.nil? ? URI.parse("http://#{url}") : URI.parse(url)   
+        URI.parse(URI::encode(url)).scheme.nil? ? URI.parse(URI::encode("http://#{url}")) : URI.parse(URI::encode(url))   
       end
 
       def parse_url(url, params)
@@ -52,8 +52,8 @@ module Gridinit
           params[:protocol] ||= uri.scheme
           params[:domain]   ||= uri.host
           params[:port]     ||= uri.port
-          params[:path]     ||= uri.path
-          params[:query]    ||= uri.query
+          params[:path]     ||= uri.path && URI::decode(uri.path)
+          params[:query]    ||= uri.query && URI::decode(uri.query)
         end
       end
 
