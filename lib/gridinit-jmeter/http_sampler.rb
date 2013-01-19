@@ -28,7 +28,8 @@ module Gridinit
           </HTTPSamplerProxy>
         EOF
         parse_url(url, params) unless url.empty?
-        fill_in(params) if params[:fill_in]
+        fill_in(params)  if params[:fill_in]
+        raw_body(params) if params[:raw_body]
         params[:query] && params[:query].split('&').each do |param| 
           name,value = param.split('=')
           fill_in({ fill_in: { "#{name}" => value }, always_encode: params[:always_encode] }) 
@@ -70,6 +71,22 @@ module Gridinit
               EOF
         end
         params.delete :fill_in
+      end
+
+      def raw_body(params)
+        @doc.at_xpath('//HTTPSamplerProxy') << 
+          Nokogiri::XML(<<-EOF.strip_heredoc).children
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            EOF
+        @doc.at_xpath('//collectionProp') << 
+          Nokogiri::XML(<<-EOF.strip_heredoc).children  
+            <elementProp name="" elementType="HTTPArgument">
+              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+              <stringProp name="Argument.value">#{params[:raw_body]}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            EOF
+        params.delete :raw_body
       end
 
     end  

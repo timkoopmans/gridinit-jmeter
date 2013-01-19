@@ -60,6 +60,12 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def header(params={}, &block)
+        node = Gridinit::Jmeter::HeaderManager.new(params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
       def auth(params={}, &block)
         node = Gridinit::Jmeter::AuthManager.new(params)
         last_node_from(caller) << node.doc.children << hash_tree
@@ -218,6 +224,8 @@ module Gridinit
         when 'visit'
           '//HTTPSamplerProxy/following-sibling::hashTree'
         when 'submit'
+          '//HTTPSamplerProxy/following-sibling::hashTree'
+        when 'post'
           '//HTTPSamplerProxy/following-sibling::hashTree'
         when 'extract'
           '//RegexExtractor/following-sibling::hashTree'
