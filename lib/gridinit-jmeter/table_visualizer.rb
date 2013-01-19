@@ -3,7 +3,7 @@ module Gridinit
 
     class TableVisualizer
       attr_accessor :doc
-      def initialize(name="View Results in Table", params={})
+      def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="#{name}" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>

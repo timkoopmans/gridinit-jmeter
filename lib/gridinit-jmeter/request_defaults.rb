@@ -16,6 +16,9 @@ module Gridinit
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path"></stringProp>
+            <boolProp name="HTTPSampler.image_parser">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
             <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
           </ConfigTestElement>
         EOF

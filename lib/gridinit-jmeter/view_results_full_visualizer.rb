@@ -3,7 +3,7 @@ module Gridinit
 
     class ViewResultsFullVisualizer
       attr_accessor :doc
-      def initialize(name="View Results Tree", params={})
+      def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="#{name}" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>

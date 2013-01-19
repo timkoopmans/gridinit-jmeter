@@ -3,7 +3,7 @@ module Gridinit
 
     class SummaryReport
       attr_accessor :doc
-      def initialize(name="Summary Report", params={})
+      def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="#{name}" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>

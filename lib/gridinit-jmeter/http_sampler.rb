@@ -22,9 +22,10 @@ module Gridinit
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
             <boolProp name="HTTPSampler.monitor">false</boolProp>
-            <boolProp name="HTTPSampler.image_parser">true</boolProp>
-            <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+            <boolProp name="HTTPSampler.image_parser">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+            <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
           </HTTPSamplerProxy>
         EOF
         parse_url(url, params) unless url.empty?
@@ -49,9 +50,9 @@ module Gridinit
           params[:path] = url # special case for named expressions
         else 
           uri               = parse_uri(url)
-          params[:protocol] ||= uri.scheme
+          params[:port]     ||= uri.port unless URI.parse(URI::encode(url)).scheme.nil?
+          params[:protocol] ||= uri.scheme unless URI.parse(URI::encode(url)).scheme.nil?
           params[:domain]   ||= uri.host
-          params[:port]     ||= uri.port
           params[:path]     ||= uri.path && URI::decode(uri.path)
           params[:query]    ||= uri.query && URI::decode(uri.query)
         end

@@ -3,7 +3,7 @@ module Gridinit
 
     class GraphVisualizer
       attr_accessor :doc
-      def initialize(name="Graph Results", params={})
+      def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="#{name}" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
