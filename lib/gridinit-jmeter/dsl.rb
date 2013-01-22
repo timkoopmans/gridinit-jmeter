@@ -206,6 +206,12 @@ module Gridinit
         last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
+
+      def ldap_ext(name="LDAPExtSampler", params={}, &block)
+        node = Gridinit::Jmeter::LDAPExtSampler.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
       
       private
 
