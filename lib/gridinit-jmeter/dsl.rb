@@ -104,6 +104,8 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      alias_method :get, :visit
+
       def submit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'POST'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
