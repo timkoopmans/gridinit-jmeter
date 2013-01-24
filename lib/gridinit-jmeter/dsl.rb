@@ -203,6 +203,21 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def stat_visualizer(name="Stat Results", params={}, &block)
+        node = Gridinit::Jmeter::StatVisualizer.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def response_time_graph_visualizer(name="Reponse Time Graph", params={}, &block)
+        node = Gridinit::Jmeter::ResponseTimeGraphVisualizer.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :response_graph, :response_time_graph_visualizer
+
+
       def summary_report(name="Summary Report", params={}, &block)
         node = Gridinit::Jmeter::SummaryReport.new(name, params)
         last_node_from(caller) << node.doc.children << hash_tree
