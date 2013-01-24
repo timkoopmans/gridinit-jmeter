@@ -31,7 +31,7 @@ module Gridinit
         parse_url(url, params) unless url.empty?
         fill_in(params)  if params[:fill_in]
         raw_body(params) if params[:raw_body]
-        params[:query] && params[:query].split('&').each do |param| 
+        params[:params] && params[:params].split('&').each do |param| 
           name,value = param.split('=')
           fill_in({ fill_in: { "#{name}" => value }, always_encode: params[:always_encode] }) 
         end
@@ -54,7 +54,7 @@ module Gridinit
           params[:protocol] ||= uri.scheme unless URI.parse(URI::encode(url)).scheme.nil?
           params[:domain]   ||= uri.host
           params[:path]     ||= uri.path && URI::decode(uri.path)
-          params[:query]    ||= uri.query && URI::decode(uri.query)
+          params[:params]   ||= uri.query && URI::decode(uri.query)
         end
       end
 
