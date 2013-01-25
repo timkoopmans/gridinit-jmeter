@@ -289,6 +289,5 @@ end
 
 def test(&block)
   t = Gridinit.dsl_eval(Gridinit::Jmeter::DSL.new, &block)
-  t.out
   t
 end
