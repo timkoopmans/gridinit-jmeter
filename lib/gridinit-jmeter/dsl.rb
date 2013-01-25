@@ -227,6 +227,46 @@ module Gridinit
         last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
+
+      #
+      # generator for http://code.google.com/p/jmeter-plugins
+      #
+
+      def gc_response_codes_per_second(name="jp@gc - Response Codes per Second", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseCodesPerSecond.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_times_distribution(name="jp@gc - Response Times Distribution", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseTimesDistribution.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_times_over_time(name="jp@gc - Response Times Over Time", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseTimesOverTime.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_times_percentiles(name="jp@gc - Response Times Percentiles", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseTimesPercentiles.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_transactions_per_second(name="jp@gc - Transactions per Second", params={}, &block)
+        node = Gridinit::Jmeter::GCTransactionsPerSecond.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_latencies_over_time(name="jp@gc - Response Latencies Over Time", params={}, &block)
+        node = Gridinit::Jmeter::GCLatenciesOverTime.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
       
       private
 
