@@ -11,9 +11,8 @@ require 'gridinit-jmeter/helpers/dsl_helper'
 require 'gridinit-jmeter/helpers/logger-colors'
 require 'gridinit-jmeter/helpers/strip-heredoc'
 
-
 # TEST PLAN
-  require 'gridinit-jmeter/test_plan'
+  require 'gridinit-jmeter/test_plan/test_plan'
 
 # THREADS
   require 'gridinit-jmeter/threads/thread_group'
@@ -104,4 +103,3 @@ require 'gridinit-jmeter/helpers/strip-heredoc'
 # SAMPLERS
   require 'gridinit-jmeter/samplers/http_sampler'
   require 'gridinit-jmeter/samplersldap_ext_sampler'
-
