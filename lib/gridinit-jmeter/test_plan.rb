@@ -3,6 +3,7 @@ module Gridinit
 
     class TestPlan
       attr_accessor :doc
+      include Helper
       def initialize
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
