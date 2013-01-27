@@ -34,3 +34,12 @@ require 'gridinit-jmeter/response_time_graph_visualizer'
 require 'gridinit-jmeter/stat_visualizer'
 require 'gridinit-jmeter/summary_report'
 require 'gridinit-jmeter/ldap_ext_sampler'
+#
+# generator for http://code.google.com/p/jmeter-plugins
+#
+require "gridinit-jmeter/gc_latencies_over_time"
+require "gridinit-jmeter/gc_response_codes_per_second"
+require "gridinit-jmeter/gc_response_times_distribution"
+require "gridinit-jmeter/gc_response_times_over_time"
+require "gridinit-jmeter/gc_response_times_percentiles"
+require "gridinit-jmeter/gc_transactions_per_second"
