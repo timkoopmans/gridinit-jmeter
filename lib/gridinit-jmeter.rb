@@ -102,4 +102,4 @@ require 'gridinit-jmeter/helpers/strip-heredoc'
 
 # SAMPLERS
   require 'gridinit-jmeter/samplers/http_sampler'
-  require 'gridinit-jmeter/samplersldap_ext_sampler'
+  require 'gridinit-jmeter/samplers/ldap_ext_sampler'

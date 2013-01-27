@@ -10,7 +10,7 @@ module Gridinit
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <boolProp name="resetInterpreter">false</boolProp>
-            <stringProp name="script">#{URI::encode(script)}</stringProp>
+            <stringProp name="script">#{script}</stringProp>
           </BeanShellPreProcessor>
         EOF
         update params

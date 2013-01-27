@@ -22,9 +22,9 @@ test do
 
   cookies
   
-  threads 1, {loops: 1} do
+  threads 3, {loops: 3} do
 
-    # random_timer 1000, 3000
+    random_timer 1000, 1500
 
     transaction 'jbhifi_home' do
       visit 'home', '/'
@@ -40,29 +40,59 @@ test do
     end
 
     transaction 'jbhifi_search_xhr' do
-      get 'tgsearch', '/tgsearch/predictSearch.aspx?id=MD84-225&k=de' do
-        header('X-Requested-With' => 'XMLHttpRequest')
-      end
-      get 'tgsearch', '/tgsearch/predictSearch.aspx?id=MD84-225&k=deado' do
-        header('X-Requested-With' => 'XMLHttpRequest')
-      end
-
       Loop 4 do
         counter
-
+        bsh_pre(<<-EOS.strip_heredoc)
+          String[] varArray = {"de", "dead", "deadma", "deadmau5"};
+          idx = Integer.parseInt(vars.get("counter"))-1;
+          vars.put("search_value", varArray[idx]);
+        EOS
+        get 'tgsearch', '/tgsearch/predictSearch.aspx?id=MD84-225&k=${search_value}' do
+          header('X-Requested-With' => 'XMLHttpRequest')
+        end
       end
-      # get 'tgsearch', '/suggestwhere.ds?query=cockatoo' do
-      #   extract 'random_suburb', '"key":"(.+?)"', {
-      #     match_number: 0,
-      #     template: '$1$'
-      #   }
-      # end
+    end
+
+    transaction'jbhifi_search' do
+      post 'search', '/music/Search/Search', {
+        fill_in: {
+          'searchType'  => 'KW',
+          'keyword'     => 'deadmau5',
+          'numRecords'  => 25
+        }
+      } do 
+        header('X-Requested-With' => 'XMLHttpRequest')
+        extract 'id', '"c":"(.+?)"', {
+          match_number: 0,
+          template: '$1$'
+        }
+      end
+    end
+
+    transaction'jbhifi_add_to_playlist' do
+      post 'playlist', '/music/Playlist/AddPreview/', {
+        fill_in: {
+          'id'  => '${id}'
+        }
+      } do 
+        header('X-Requested-With' => 'XMLHttpRequest')
+        extract 'mp3', '"mp3":"(.+?)"', {
+          match_number: 0,
+          template: '$1$'
+        }
+      end
+    end
+
+    exists 'mp3' do
+      transaction'jbhifi_preview_track' do
+        get 'preview', '${mp3}'
+      end
     end
 
     view_results
 
   end
 
-# end.grid ARGV[1]
-end.jmx
+end.grid ENV['API_TOKEN']
+# end.jmx
 # end.run(path: '/usr/share/jmeter/bin/')

@@ -121,8 +121,6 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
-      alias_method :script_pre, :bsh_pre
-
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
@@ -254,10 +252,6 @@ module Gridinit
         last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
-
-      #
-      # generator for http://code.google.com/p/jmeter-plugins
-      #
 
       def gc_response_codes_per_second(name="jp@gc - Response Codes per Second", params={}, &block)
         node = Gridinit::Jmeter::GCResponseCodesPerSecond.new(name, params)
