@@ -97,6 +97,32 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def If(name="If Controller", params={}, &block)
+        node = Gridinit::Jmeter::IfController.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def Loop(loops=1, params={}, &block)
+        node = Gridinit::Jmeter::LoopController.new(loops, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def counter(name="counter", params={}, &block)
+        node = Gridinit::Jmeter::CounterConfig.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def bsh_pre(script, params={}, &block)
+        node = Gridinit::Jmeter::BeanShellPreProcessor.new(script, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :script_pre, :bsh_pre
+
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
@@ -217,7 +243,6 @@ module Gridinit
 
       alias_method :response_graph, :response_time_graph_visualizer
 
-
       def summary_report(name="Summary Report", params={}, &block)
         node = Gridinit::Jmeter::SummaryReport.new(name, params)
         last_node_from(caller) << node.doc.children << hash_tree
@@ -252,6 +277,12 @@ module Gridinit
           '//OnceOnlyController/following-sibling::hashTree'
         when 'exists'
           '//IfController/following-sibling::hashTree'
+        when 'Loop'
+          '//LoopController/following-sibling::hashTree'
+        when 'counter'
+          '//CounterConfig/following-sibling::hashTree'
+        when 'bsh_pre'
+          '//BeanShellPreProcessor/following-sibling::hashTree'
         when 'visit'
           '//HTTPSamplerProxy/following-sibling::hashTree'
         when 'submit'
