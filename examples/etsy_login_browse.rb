@@ -3,13 +3,13 @@ require 'gridinit-jmeter'
 
 test do
 
-  defaults domain: 'www.etsy.com'
+  defaults :domain => 'www.etsy.com'
 
-  cache clear_each_iteration: true
+  cache :clear_each_iteration => true
 
   cookies
   
-  threads 1, {loops: 10} do
+  threads 1, {:loops => 10} do
 
     random_timer 1000, 3000
 
@@ -22,13 +22,13 @@ test do
     once do
       transaction '02_etsy_signin' do
         submit 'signin', 'https://www.etsy.com/signin', {
-          fill_in: {
-            username:   'tim.koops@gmail.com',
-            password:   ARGV[0],
-            persistent: 1,
-            from_page:  'http://www.etsy.com/',
-            from_action: '',
-            from_overlay: 1
+          :fill_in => {
+            :username =>   'tim.koops@gmail.com',
+            :password =>   ARGV[0],
+            :persistent => 1,
+            :from_page =>  'http://www.etsy.com/',
+            :from_action => '',
+            :from_overlay => 1
           }
         } do
           assert 'contains', 'Tim'
