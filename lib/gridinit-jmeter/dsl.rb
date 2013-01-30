@@ -31,9 +31,9 @@ module Gridinit
         @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children << hash_tree
         
         variables(
-          name: 'testguid', 
-          value: '${__P(testguid,${__time(,)})}',
-          comments: 'The testguid variable is mandatory when running on the Grid.') {} 
+          :name => 'testguid',
+          :value => '${__P(testguid,${__time(,)})}',
+          :comments => 'The testguid variable is mandatory when running on the Grid.') {}
       end
 
       def variables(params={}, &block)

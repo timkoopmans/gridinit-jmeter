@@ -5,12 +5,12 @@ require 'open-uri'
 test do
  
    defaults(
-    domain: 'now.jbhifi.com.au',
-    protocol: 'https', 
-    image_parser: true,
-    concurrentDwn: true,
-    embedded_url_re: '.+?now.((?!\$\{).)*$',
-    concurrentPool: 4
+    :domain => 'now.jbhifi.com.au',
+    :protocol => 'https',
+    :image_parser => true,
+    :concurrentDwn => true,
+    :embedded_url_re => '.+?now.((?!\$\{).)*$',
+    :concurrentPool => 4
   )
 
   header(
@@ -18,20 +18,20 @@ test do
     'Accept' => '*/*'
   )
 
-  cache clear_each_iteration: true
+  cache :clear_each_iteration => true
 
   cookies
   
-  threads 3, {loops: 3} do
+  threads 3, {:loops => 3} do
 
     random_timer 1000, 1500
 
     transaction 'jbhifi_home' do
       visit 'home', '/'
       visit 'choose', '/music/Home/Choose/?_=${__time(,)}', {
-        follow_redirects: false,
-        image_parser: true,
-        embedded_url_re: 'none',
+        :follow_redirects => false,
+        :image_parser => true,
+        :embedded_url_re => 'none',
         } do
         header('X-Requested-With' => 'XMLHttpRequest')
         assert 'contains', 'WELCOME TO JB HI-FI NOW'
@@ -55,7 +55,7 @@ test do
 
     transaction'jbhifi_search' do
       post 'search', '/music/Search/Search', {
-        fill_in: {
+        :fill_in => {
           'searchType'  => 'KW',
           'keyword'     => 'deadmau5',
           'numRecords'  => 25
@@ -63,22 +63,22 @@ test do
       } do 
         header('X-Requested-With' => 'XMLHttpRequest')
         extract 'id', '"c":"(.+?)"', {
-          match_number: 0,
-          template: '$1$'
+          :match_number => 0,
+          :template => '$1$'
         }
       end
     end
 
     transaction'jbhifi_add_to_playlist' do
       post 'playlist', '/music/Playlist/AddPreview/', {
-        fill_in: {
+        :fill_in => {
           'id'  => '${id}'
         }
       } do 
         header('X-Requested-With' => 'XMLHttpRequest')
         extract 'mp3', '"mp3":"(.+?)"', {
-          match_number: 0,
-          template: '$1$'
+          :match_number => 0,
+          :template => '$1$'
         }
       end
     end

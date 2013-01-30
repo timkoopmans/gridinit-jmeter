@@ -6,14 +6,14 @@ endpoint = 'localhost:3000'
 
 test do
 
-  cache clear_each_iteration: true
+  cache :clear_each_iteration => true
   cookies
   
   threads 100 do
 
     random_timer 3000, 3000
   
-    transaction 'First Visit', {parent: true} do
+    transaction 'First Visit', {:parent => true} do
       visit 'Home Page', "#{base_url}/" do
         extract 'csrf-token', "content='(.+?)' name='csrf-token'"
       end
@@ -21,9 +21,9 @@ test do
 
     transaction 'Login' do
       submit 'Submit Form', "#{base_url}/login", {
-        fill_in: {
-          username: 'tim',
-          password: 'password',
+        :fill_in => {
+          :username => 'tim',
+          :password => 'password',
           'csrf-token' => '${csrf-token}'
         }
       }
