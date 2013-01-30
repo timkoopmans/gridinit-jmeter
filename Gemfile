@@ -5,6 +5,7 @@ gemspec
 
 gem 'nokogiri'
 gem 'rest-client'
+gem 'json'
 
 platforms :jruby do
   gem 'json-jruby'

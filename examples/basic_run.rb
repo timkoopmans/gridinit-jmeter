@@ -6,7 +6,7 @@ test do
     visit 'Google Search', 'http://google.com'
   end
 end.run(
-  :path => '/usr/share/jmeter/bin/',
+  :path => '',
   :file => 'jmeter.jmx',
   :log => 'jmeter.log',
   :jtl => 'results.jtl')
