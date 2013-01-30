@@ -34,7 +34,7 @@ module Gridinit
         raw_body(params) if params[:raw_body]
         params[:params] && params[:params].split('&').each do |param| 
           name,value = param.split('=')
-          fill_in({ fill_in: { "#{name}" => value }, always_encode: params[:always_encode] }) 
+          fill_in({ :fill_in => { "#{name}" => value }, :always_encode => params[:always_encode] })
         end
         update params
       end
