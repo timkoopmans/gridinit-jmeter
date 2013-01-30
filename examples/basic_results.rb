@@ -2,7 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gridinit-jmeter'
 
 test do
-  threads 1, { loops: 10 } do
+  threads 1, { :loops => 10 } do
     visit 'Google Search', 'http://google.com'
   end
   
