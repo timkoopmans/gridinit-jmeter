@@ -97,6 +97,30 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def If(name="If Controller", params={}, &block)
+        node = Gridinit::Jmeter::IfController.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def Loop(loops=1, params={}, &block)
+        node = Gridinit::Jmeter::LoopController.new(loops, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def counter(name="counter", params={}, &block)
+        node = Gridinit::Jmeter::CounterConfig.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def bsh_pre(script, params={}, &block)
+        node = Gridinit::Jmeter::BeanShellPreProcessor.new(script, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
@@ -217,7 +241,6 @@ module Gridinit
 
       alias_method :response_graph, :response_time_graph_visualizer
 
-
       def summary_report(name="Summary Report", params={}, &block)
         node = Gridinit::Jmeter::SummaryReport.new(name, params)
         last_node_from(caller) << node.doc.children << hash_tree
@@ -226,6 +249,42 @@ module Gridinit
 
       def ldap_ext(name="LDAPExtSampler", params={}, &block)
         node = Gridinit::Jmeter::LDAPExtSampler.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_codes_per_second(name="jp@gc - Response Codes per Second", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseCodesPerSecond.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_times_distribution(name="jp@gc - Response Times Distribution", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseTimesDistribution.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_times_over_time(name="jp@gc - Response Times Over Time", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseTimesOverTime.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_response_times_percentiles(name="jp@gc - Response Times Percentiles", params={}, &block)
+        node = Gridinit::Jmeter::GCResponseTimesPercentiles.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_transactions_per_second(name="jp@gc - Transactions per Second", params={}, &block)
+        node = Gridinit::Jmeter::GCTransactionsPerSecond.new(name, params)
+        last_node_from(caller) << node.doc.children << hash_tree
+        self.instance_exec(&block) if block
+      end
+
+      def gc_latencies_over_time(name="jp@gc - Response Latencies Over Time", params={}, &block)
+        node = Gridinit::Jmeter::GCLatenciesOverTime.new(name, params)
         last_node_from(caller) << node.doc.children << hash_tree
         self.instance_exec(&block) if block
       end
@@ -252,6 +311,12 @@ module Gridinit
           '//OnceOnlyController/following-sibling::hashTree'
         when 'exists'
           '//IfController/following-sibling::hashTree'
+        when 'Loop'
+          '//LoopController/following-sibling::hashTree'
+        when 'counter'
+          '//CounterConfig/following-sibling::hashTree'
+        when 'bsh_pre'
+          '//BeanShellPreProcessor/following-sibling::hashTree'
         when 'visit'
           '//HTTPSamplerProxy/following-sibling::hashTree'
         when 'submit'
