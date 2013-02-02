@@ -93,6 +93,6 @@ test do
 
   end
 
-end.grid ENV['API_TOKEN']
-# end.jmx
+# end.grid ENV['API_TOKEN']
+end.jmx
 # end.run(path: '/usr/share/jmeter/bin/')
