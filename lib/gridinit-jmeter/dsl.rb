@@ -66,6 +66,14 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def xhr(params={}, &block)
+        node = Gridinit::Jmeter::HeaderManager.new(
+          params.merge('X-Requested-With' => 'XMLHttpRequest')
+        )
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
       def auth(params={}, &block)
         node = Gridinit::Jmeter::AuthManager.new(params)
         attach_to_last(node, caller)
