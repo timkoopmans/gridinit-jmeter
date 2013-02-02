@@ -38,93 +38,93 @@ module Gridinit
 
       def variables(params={}, &block)
         node = Gridinit::Jmeter::UserDefinedVariable.new(params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def defaults(params={}, &block)
         node = Gridinit::Jmeter::RequestDefaults.new(params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def cookies(params={}, &block)
         node = Gridinit::Jmeter::CookieManager.new(params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def cache(params={}, &block)
         node = Gridinit::Jmeter::CacheManager.new(params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def header(params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def auth(params={}, &block)
         node = Gridinit::Jmeter::AuthManager.new(params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def threads(num_threads=1, params={}, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(num_threads, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def transaction(name="Transaction Contoller", params={}, &block)
         node = Gridinit::Jmeter::Transaction.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def exists(var, params={}, &block)
         params[:condition] = "'${#{var}}'.length > 0"
         node = Gridinit::Jmeter::IfController.new("if #{var}", params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def once(name="do once", params={}, &block)
         node = Gridinit::Jmeter::OnceOnly.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def If(name="If Controller", params={}, &block)
         node = Gridinit::Jmeter::IfController.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def Loop(loops=1, params={}, &block)
         node = Gridinit::Jmeter::LoopController.new(loops, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def counter(name="counter", params={}, &block)
         node = Gridinit::Jmeter::CounterConfig.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def bsh_pre(script, params={}, &block)
         node = Gridinit::Jmeter::BeanShellPreProcessor.new(script, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -133,7 +133,7 @@ module Gridinit
       def submit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'POST'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -148,7 +148,7 @@ module Gridinit
         else
           Gridinit::Jmeter::RegexExtractor.new(*args)
         end
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -156,7 +156,7 @@ module Gridinit
 
       def random_timer(delay=0, range=0, &block)
         node = Gridinit::Jmeter::GaussianRandomTimer.new(delay, range)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -164,7 +164,7 @@ module Gridinit
 
       def assert(match="contains", pattern="", params={}, &block)
         node = Gridinit::Jmeter::ResponseAssertion.new(match, pattern, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -209,7 +209,7 @@ module Gridinit
 
       def view_results_full_visualizer(name="View Results Tree", params={}, &block)
         node = Gridinit::Jmeter::ViewResultsFullVisualizer.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -217,25 +217,25 @@ module Gridinit
 
       def table_visualizer(name="View Results in Table", params={}, &block)
         node = Gridinit::Jmeter::TableVisualizer.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def graph_visualizer(name="Graph Results", params={}, &block)
         node = Gridinit::Jmeter::GraphVisualizer.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def stat_visualizer(name="Stat Results", params={}, &block)
         node = Gridinit::Jmeter::StatVisualizer.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def response_time_graph_visualizer(name="Reponse Time Graph", params={}, &block)
         node = Gridinit::Jmeter::ResponseTimeGraphVisualizer.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
@@ -243,49 +243,49 @@ module Gridinit
 
       def summary_report(name="Summary Report", params={}, &block)
         node = Gridinit::Jmeter::SummaryReport.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def ldap_ext(name="LDAPExtSampler", params={}, &block)
         node = Gridinit::Jmeter::LDAPExtSampler.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def gc_response_codes_per_second(name="jp@gc - Response Codes per Second", params={}, &block)
         node = Gridinit::Jmeter::GCResponseCodesPerSecond.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def gc_response_times_distribution(name="jp@gc - Response Times Distribution", params={}, &block)
         node = Gridinit::Jmeter::GCResponseTimesDistribution.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def gc_response_times_over_time(name="jp@gc - Response Times Over Time", params={}, &block)
         node = Gridinit::Jmeter::GCResponseTimesOverTime.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def gc_response_times_percentiles(name="jp@gc - Response Times Percentiles", params={}, &block)
         node = Gridinit::Jmeter::GCResponseTimesPercentiles.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def gc_transactions_per_second(name="jp@gc - Transactions per Second", params={}, &block)
         node = Gridinit::Jmeter::GCTransactionsPerSecond.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
 
       def gc_latencies_over_time(name="jp@gc - Response Latencies Over Time", params={}, &block)
         node = Gridinit::Jmeter::GCLatenciesOverTime.new(name, params)
-        last_node_from(caller) << node.doc.children << hash_tree
+        attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
       
@@ -295,10 +295,10 @@ module Gridinit
         Nokogiri::XML::Node.new("hashTree", @root)
       end
 
-      def last_node_from(calling_method)
+      def attach_to_last(node, calling_method)
         xpath = xpath_from(calling_method)
-        node  = @root.xpath(xpath).last
-        node
+        last_node  = @root.xpath(xpath).last
+        last_node << node.doc.children << hash_tree
       end
 
       def xpath_from(calling_method)
