@@ -31,8 +31,8 @@ module Gridinit
         @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children << hash_tree
         
         variables(
-          :name => 'testguid',
-          :value => '${__P(testguid,${__time(,)})}',
+          :name     => 'testguid',
+          :value    => '${__P(testguid,${__time(,)})}',
           :comments => 'The testguid variable is mandatory when running on the Grid.') {}
       end
 
@@ -170,43 +170,6 @@ module Gridinit
 
       alias_method :web_reg_find, :assert
 
-      def out(params={})
-        puts doc.to_xml(:indent => 2)
-      end
-
-      def jmx(params={})
-        file(params)
-        logger.info "JMX saved to: #{params[:file]}"
-      end
-
-      def run(params={})
-        file(params)
-        logger.warn "Test executing locally ..."
-        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
-        logger.info cmd
-        `#{cmd}`
-        logger.info "Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
-      end
-
-      def grid(token, params={})
-        RestClient.proxy = params[:proxy] if params[:proxy]
-        begin
-          file = Tempfile.new('jmeter')
-          file.write(doc.to_xml(:indent => 2))
-          file.rewind
-          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
-          {
-            :name => 'attachment', 
-            :attachment => File.new("#{file.path}", 'rb'),
-            :multipart => true,
-            :content_type => 'application/octet-stream'
-          }
-          logger.info "Results at: #{JSON.parse(response)["results"]}" if response.code == 200
-        rescue => e
-          logger.fatal "There was an error: #{e.message}"
-        end
-      end
-
       def view_results_full_visualizer(name="View Results Tree", params={}, &block)
         node = Gridinit::Jmeter::ViewResultsFullVisualizer.new(name, params)
         attach_to_last(node, caller)
@@ -287,6 +250,43 @@ module Gridinit
         node = Gridinit::Jmeter::GCLatenciesOverTime.new(name, params)
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
+      end
+
+      def out(params={})
+        puts doc.to_xml(:indent => 2)
+      end
+
+      def jmx(params={})
+        file(params)
+        logger.info "JMX saved to: #{params[:file]}"
+      end
+
+      def run(params={})
+        file(params)
+        logger.warn "Test executing locally ..."
+        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
+        logger.info cmd
+        `#{cmd}`
+        logger.info "Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
+      end
+
+      def grid(token, params={})
+        RestClient.proxy = params[:proxy] if params[:proxy]
+        begin
+          file = Tempfile.new('jmeter')
+          file.write(doc.to_xml(:indent => 2))
+          file.rewind
+          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
+          {
+            :name => 'attachment', 
+            :attachment => File.new("#{file.path}", 'rb'),
+            :multipart => true,
+            :content_type => 'application/octet-stream'
+          }
+          logger.info "Results at: #{JSON.parse(response)["results"]}" if response.code == 200
+        rescue => e
+          logger.fatal "There was an error: #{e.message}"
+        end
       end
       
       private
