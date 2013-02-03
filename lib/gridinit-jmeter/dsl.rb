@@ -76,9 +76,8 @@ module Gridinit
 
       def with_user_agent(device, params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(
-          params.merge('User-Agent' => Gridinit::Jmeter::UserAgent.new(device))
+          params.merge('User-Agent' => Gridinit::Jmeter::UserAgent.new(device).string)
         )
-        puts Gridinit::Jmeter::UserAgent.new(device).to_s
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
