@@ -5,21 +5,16 @@ require 'open-uri'
 test do
  
    defaults(
-    :domain => 'now.jbhifi.com.au',
-    :protocol => 'https',
-    :image_parser => true,
-    :concurrentDwn => true,
+    :domain          => 'now.jbhifi.com.au',
+    :protocol        => 'https',
+    :image_parser    => true,
+    :concurrentDwn   => true,
     :embedded_url_re => '.+?now.((?!\$\{).)*$',
-    :concurrentPool => 4
+    :concurrentPool  => 4
   )
 
-  with_user_agent :iphone
+  with_user_agent :iphone, 'Accept' => '*/*'
   
-  header(
-    'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.27 (KHTML, like Gecko) Chrome/26.0.1386.0 Safari/537.27',
-    'Accept' => '*/*'
-  )
-
   cache :clear_each_iteration => true
 
   cookies
@@ -31,14 +26,13 @@ test do
     transaction 'jbhifi_home' do
       visit 'home', '/'
       visit 'choose', '/music/Home/Choose/?_=${__time(,)}', {
-        :follow_redirects => false,
-        :image_parser => true,
-        :embedded_url_re => 'none',
+          :follow_redirects => false,
+          :image_parser     => true,
+          :embedded_url_re  => 'none',
         } do
-        with_xhr
-        assert 'contains', 'WELCOME TO JB HI-FI NOW'
+          with_xhr
+          assert 'contains', 'WELCOME TO JB HI-FI NOW'
       end
-
     end
 
     transaction 'jbhifi_search_xhr' do
@@ -66,7 +60,7 @@ test do
         with_xhr
         extract 'id', '"c":"(.+?)"', {
           :match_number => 0,
-          :template => '$1$'
+          :template     => '$1$'
         }
       end
     end
