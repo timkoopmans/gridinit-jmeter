@@ -13,6 +13,8 @@ test do
     :concurrentPool => 4
   )
 
+  with_user_agent :iphone
+  
   header(
     'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.27 (KHTML, like Gecko) Chrome/26.0.1386.0 Safari/537.27',
     'Accept' => '*/*'
@@ -33,7 +35,7 @@ test do
         :image_parser => true,
         :embedded_url_re => 'none',
         } do
-        header('X-Requested-With' => 'XMLHttpRequest')
+        with_xhr
         assert 'contains', 'WELCOME TO JB HI-FI NOW'
       end
 
@@ -48,7 +50,7 @@ test do
           vars.put("search_value", varArray[idx]);
         EOS
         get 'tgsearch', '/tgsearch/predictSearch.aspx?id=MD84-225&k=${search_value}' do
-          header('X-Requested-With' => 'XMLHttpRequest')
+          with_xhr
         end
       end
     end
@@ -61,7 +63,7 @@ test do
           'numRecords'  => 25
         }
       } do 
-        header('X-Requested-With' => 'XMLHttpRequest')
+        with_xhr
         extract 'id', '"c":"(.+?)"', {
           :match_number => 0,
           :template => '$1$'
@@ -75,7 +77,7 @@ test do
           'id'  => '${id}'
         }
       } do 
-        header('X-Requested-With' => 'XMLHttpRequest')
+        with_xhr
         extract 'mp3', '"mp3":"(.+?)"', {
           :match_number => 0,
           :template => '$1$'

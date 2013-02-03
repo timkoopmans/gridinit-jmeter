@@ -10,6 +10,7 @@ require 'gridinit-jmeter/helpers/fallback_content_proxy'
 require 'gridinit-jmeter/helpers/dsl_helper'
 require 'gridinit-jmeter/helpers/logger-colors'
 require 'gridinit-jmeter/helpers/strip-heredoc'
+require 'gridinit-jmeter/helpers/user-agents'
 
 # TEST PLAN
   require 'gridinit-jmeter/test_plan/test_plan'
