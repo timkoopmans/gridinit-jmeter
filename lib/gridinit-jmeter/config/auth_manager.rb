@@ -9,7 +9,7 @@ module Gridinit
           <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
-                <stringProp name="Authorization.url">/</stringProp>
+                <stringProp name="Authorization.url"></stringProp>
                 <stringProp name="Authorization.username"></stringProp>
                 <stringProp name="Authorization.password"></stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
