@@ -32,10 +32,15 @@ module Gridinit
         parse_url(url, params) unless url.empty?
         fill_in(params)  if params[:fill_in]
         raw_body(params) if params[:raw_body]
-        params[:params] && params[:params].split('&').each do |param| 
-          name,value = param.split('=')
-          fill_in({ :fill_in => { "#{name}" => value }, :always_encode => params[:always_encode] })
+        if params[:raw_path]
+          params[:path] = url
+        else
+          params[:params] && params[:params].split('&').each do |param| 
+            name,value = param.split('=')
+            fill_in({ :fill_in => { "#{name}" => value }, :always_encode => params[:always_encode] })
+          end
         end
+
         update params
       end
 
