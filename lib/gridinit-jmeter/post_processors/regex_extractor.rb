@@ -13,6 +13,7 @@ module Gridinit
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.default"></stringProp>
             <stringProp name="RegexExtractor.match_number">0</stringProp>
+            <stringProp name="Sample.scope">all</stringProp>
           </RegexExtractor>
         EOF
         update params
