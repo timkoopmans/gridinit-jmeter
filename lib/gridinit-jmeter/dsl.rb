@@ -113,6 +113,12 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def throughput(name="throughput", percent=100.0, params={}, &block)
+        node = Gridinit::Jmeter::Throughput.new(name, percent, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
       def If(name="If Controller", params={}, &block)
         node = Gridinit::Jmeter::IfController.new(name, params)
         attach_to_last(node, caller)

@@ -100,6 +100,7 @@ require 'gridinit-jmeter/helpers/user-agents'
   require 'gridinit-jmeter/controllers/once_only'
   require 'gridinit-jmeter/controllers/if_controller'
   require 'gridinit-jmeter/controllers/loop_controller'
+  require 'gridinit-jmeter/controllers/throughput'
 
 # SAMPLERS
   require 'gridinit-jmeter/samplers/http_sampler'
