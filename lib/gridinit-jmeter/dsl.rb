@@ -329,6 +329,8 @@ module Gridinit
           '//ThreadGroup/following-sibling::hashTree'
         when 'transaction'
           '//TransactionController/following-sibling::hashTree'
+        when 'throughput'
+          '//ThroughputController/following-sibling::hashTree'
         when 'once'
           '//OnceOnlyController/following-sibling::hashTree'
         when 'exists'

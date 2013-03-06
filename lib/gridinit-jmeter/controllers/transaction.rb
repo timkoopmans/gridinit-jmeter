@@ -8,6 +8,7 @@ module Gridinit
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="#{name}" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
+            <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
         EOF
         update params

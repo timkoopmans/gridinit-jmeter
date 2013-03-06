@@ -6,7 +6,7 @@ module Gridinit
       include Helper
       def initialize(name, percent, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="#{name}" enabled="true">
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="#{percent.to_i}%_#{name}" enabled="true">
           <intProp name="ThroughputController.style">1</intProp>
           <boolProp name="ThroughputController.perThread">false</boolProp>
           <intProp name="ThroughputController.maxThroughput">1</intProp>
