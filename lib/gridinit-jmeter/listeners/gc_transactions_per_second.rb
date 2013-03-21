@@ -41,7 +41,6 @@ module Gridinit
             <stringProp name="include_sample_labels"></stringProp>
             <stringProp name="exclude_sample_labels"></stringProp>
           </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
-
         EOF
         update params
       end

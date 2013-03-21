@@ -37,7 +37,6 @@ module Gridinit
             </objProp>
             <stringProp name="filename"></stringProp>
           </ResultCollector>
-
         EOF
         update params
       end

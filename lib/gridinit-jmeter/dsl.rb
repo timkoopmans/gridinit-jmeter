@@ -218,6 +218,14 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def simple_data_writer(name="Simple Data Writer", params={}, &block)
+        node = Gridinit::Jmeter::SimpleDataWriter.new(name, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :log, :simple_data_writer
+
       def response_time_graph_visualizer(name="Reponse Time Graph", params={}, &block)
         node = Gridinit::Jmeter::ResponseTimeGraphVisualizer.new(name, params)
         attach_to_last(node, caller)
