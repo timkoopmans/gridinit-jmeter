@@ -22,7 +22,7 @@ module Gridinit
                 <dataType>false</dataType>
                 <encoding>false</encoding>
                 <assertions>false</assertions>
-                <subresults>false</subresults>
+                <subresults>true</subresults>
                 <responseData>false</responseData>
                 <samplerData>false</samplerData>
                 <xml>true</xml>
@@ -33,8 +33,11 @@ module Gridinit
                 <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
                 <assertionsResultsToSave>0</assertionsResultsToSave>
                 <bytes>true</bytes>
+                <url>true</url>
+                <hostname>true</hostname>
                 <threadCounts>true</threadCounts>
                 <sampleCount>true</sampleCount>
+                <idleTime>true</idleTime>
               </value>
             </objProp>
             <stringProp name="filename">/var/log/gridnode/stderr.log</stringProp>
