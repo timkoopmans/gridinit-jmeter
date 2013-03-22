@@ -164,9 +164,9 @@ module Gridinit
       def extract(*args, &block)
         node = case args.first
         when :regex
-          Gridinit::Jmeter::RegexExtractor.new(*args.last(2))
+          Gridinit::Jmeter::RegexExtractor.new(*args[1..-1])
         when :xpath
-          Gridinit::Jmeter::XpathExtractor.new(*args.last(2))
+          Gridinit::Jmeter::XpathExtractor.new(*args[1..-1])
         else
           Gridinit::Jmeter::RegexExtractor.new(*args)
         end
