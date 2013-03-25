@@ -282,6 +282,14 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def throughput_shaper(name="jp@gc - Throughput Shaping Timer", steps=[], params={}, &block)
+        node = Gridinit::Jmeter::ThroughputShapingTimer.new(name, steps)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :shaper, :throughput_shaper
+
       def out(params={})
         puts doc.to_xml(:indent => 2)
       end
@@ -359,6 +367,8 @@ module Gridinit
           '//RegexExtractor/following-sibling::hashTree'
         when 'random_timer'
           '//GaussianRandomTimer/following-sibling::hashTree'
+        when 'throughput_shaper'
+          '//kg.apc.jmeter.timers.VariableThroughputTimer/following-sibling::hashTree'
         else 
           '//TestPlan/following-sibling::hashTree'
         end

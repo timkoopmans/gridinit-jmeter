@@ -11,6 +11,11 @@ platforms :jruby do
   gem 'json-jruby'
 end
 
+group :development do
+  gem 'pry'
+  gem 'pry-nav'
+end
+
 group :test do
   gem 'rake'
   gem 'rspec'
