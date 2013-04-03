@@ -102,6 +102,9 @@ require 'gridinit-jmeter/helpers/user-agents'
   require 'gridinit-jmeter/controllers/if_controller'
   require 'gridinit-jmeter/controllers/loop_controller'
   require 'gridinit-jmeter/controllers/throughput'
+  require 'gridinit-jmeter/controllers/random_order'
+  require 'gridinit-jmeter/controllers/simple'
+  require 'gridinit-jmeter/controllers/interleave'
 
 # SAMPLERS
   require 'gridinit-jmeter/samplers/http_sampler'

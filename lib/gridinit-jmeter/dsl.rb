@@ -29,11 +29,11 @@ module Gridinit
         EOF
         node = Gridinit::Jmeter::TestPlan.new
         @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children << hash_tree
-        
+
         variables(
-          :name     => 'testguid',
-          :value    => '${__P(testguid,${__time(,)})}',
-          :comments => 'The testguid variable is mandatory when running on the Grid.') {}
+            :name     => 'testguid',
+            :value    => '${__P(testguid,${__time(,)})}',
+            :comments => 'The testguid variable is mandatory when running on the Grid.') {}
       end
 
       def variables(params={}, &block)
@@ -68,7 +68,7 @@ module Gridinit
 
       def with_xhr(params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(
-          params.merge('X-Requested-With' => 'XMLHttpRequest')
+            params.merge('X-Requested-With' => 'XMLHttpRequest')
         )
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
@@ -76,7 +76,7 @@ module Gridinit
 
       def with_user_agent(device, params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(
-          params.merge('User-Agent' => Gridinit::Jmeter::UserAgent.new(device).string)
+            params.merge('User-Agent' => Gridinit::Jmeter::UserAgent.new(device).string)
         )
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
@@ -102,7 +102,7 @@ module Gridinit
 
       def exists(var, params={}, &block)
         params[:condition] = "'${#{var}}'.length > 0"
-        node = Gridinit::Jmeter::IfController.new("if #{var}", params)
+        node               = Gridinit::Jmeter::IfController.new("if #{var}", params)
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
@@ -137,6 +137,24 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def random_order(name='Random Order Controller', params={}, &block)
+        node = Gridinit::Jmeter::RandomOrderController.new(name, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
+      def interleave(name='Interleave Controller', params={}, &block)
+        node = Gridinit::Jmeter::InterleaveController.new(name, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
+      def simple(name='Simple Controller', params={}, &block)
+        node = Gridinit::Jmeter::SimpleController.new(name, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
       def bsh_pre(script, params={}, &block)
         node = Gridinit::Jmeter::BeanShellPreProcessor.new(script, params)
         attach_to_last(node, caller)
@@ -145,7 +163,7 @@ module Gridinit
 
       def visit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'GET'
-        node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
+        node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
@@ -154,7 +172,7 @@ module Gridinit
 
       def submit(name="HTTP Request", url="", params={}, &block)
         params[:method] = 'POST'
-        node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
+        node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
@@ -163,13 +181,13 @@ module Gridinit
 
       def extract(*args, &block)
         node = case args.first
-        when :regex
-          Gridinit::Jmeter::RegexExtractor.new(*args[1..-1])
-        when :xpath
-          Gridinit::Jmeter::XpathExtractor.new(*args[1..-1])
-        else
-          Gridinit::Jmeter::RegexExtractor.new(*args)
-        end
+                 when :regex
+                   Gridinit::Jmeter::RegexExtractor.new(*args[1..-1])
+                 when :xpath
+                   Gridinit::Jmeter::XpathExtractor.new(*args[1..-1])
+                 else
+                   Gridinit::Jmeter::RegexExtractor.new(*args)
+               end
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
@@ -314,19 +332,19 @@ module Gridinit
           file = Tempfile.new('jmeter')
           file.write(doc.to_xml(:indent => 2))
           file.rewind
-          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
-          {
-            :name => 'attachment', 
-            :attachment => File.new("#{file.path}", 'rb'),
-            :multipart => true,
-            :content_type => 'application/octet-stream'
-          }
+          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}",
+                                     {
+                                         :name         => 'attachment',
+                                         :attachment   => File.new("#{file.path}", 'rb'),
+                                         :multipart    => true,
+                                         :content_type => 'application/octet-stream'
+                                     }
           logger.info "Results at: #{JSON.parse(response)["results"]}" if response.code == 200
         rescue => e
           logger.fatal "There was an error: #{e.message}"
         end
       end
-      
+
       private
 
       def hash_tree
@@ -334,43 +352,43 @@ module Gridinit
       end
 
       def attach_to_last(node, calling_method)
-        xpath = xpath_from(calling_method)
-        last_node  = @root.xpath(xpath).last
+        xpath     = xpath_from(calling_method)
+        last_node = @root.xpath(xpath).last
         last_node << node.doc.children << hash_tree
       end
 
       def xpath_from(calling_method)
         case calling_method.grep(/dsl/)[1][/`.*'/][1..-2]
-        when 'threads'
-          '//ThreadGroup/following-sibling::hashTree'
-        when 'transaction'
-          '//TransactionController/following-sibling::hashTree'
-        when 'throughput'
-          '//ThroughputController/following-sibling::hashTree'
-        when 'once'
-          '//OnceOnlyController/following-sibling::hashTree'
-        when 'exists'
-          '//IfController/following-sibling::hashTree'
-        when 'Loop'
-          '//LoopController/following-sibling::hashTree'
-        when 'counter'
-          '//CounterConfig/following-sibling::hashTree'
-        when 'bsh_pre'
-          '//BeanShellPreProcessor/following-sibling::hashTree'
-        when 'visit'
-          '//HTTPSamplerProxy/following-sibling::hashTree'
-        when 'submit'
-          '//HTTPSamplerProxy/following-sibling::hashTree'
-        when 'post'
-          '//HTTPSamplerProxy/following-sibling::hashTree'
-        when 'extract'
-          '//RegexExtractor/following-sibling::hashTree'
-        when 'random_timer'
-          '//GaussianRandomTimer/following-sibling::hashTree'
-        when 'throughput_shaper'
-          '//kg.apc.jmeter.timers.VariableThroughputTimer/following-sibling::hashTree'
-        else 
-          '//TestPlan/following-sibling::hashTree'
+          when 'threads'
+            '//ThreadGroup/following-sibling::hashTree'
+          when 'transaction'
+            '//TransactionController/following-sibling::hashTree'
+          when 'throughput'
+            '//ThroughputController/following-sibling::hashTree'
+          when 'once'
+            '//OnceOnlyController/following-sibling::hashTree'
+          when 'exists'
+            '//IfController/following-sibling::hashTree'
+          when 'Loop'
+            '//LoopController/following-sibling::hashTree'
+          when 'counter'
+            '//CounterConfig/following-sibling::hashTree'
+          when 'bsh_pre'
+            '//BeanShellPreProcessor/following-sibling::hashTree'
+          when 'visit'
+            '//HTTPSamplerProxy/following-sibling::hashTree'
+          when 'submit'
+            '//HTTPSamplerProxy/following-sibling::hashTree'
+          when 'post'
+            '//HTTPSamplerProxy/following-sibling::hashTree'
+          when 'extract'
+            '//RegexExtractor/following-sibling::hashTree'
+          when 'random_timer'
+            '//GaussianRandomTimer/following-sibling::hashTree'
+          when 'throughput_shaper'
+            '//kg.apc.jmeter.timers.VariableThroughputTimer/following-sibling::hashTree'
+          else
+            '//TestPlan/following-sibling::hashTree'
         end
       end
 
@@ -380,11 +398,11 @@ module Gridinit
       end
 
       def doc
-        Nokogiri::XML(@root.to_s,&:noblanks)
+        Nokogiri::XML(@root.to_s, &:noblanks)
       end
 
       def logger
-        @log ||= Logger.new(STDOUT)
+        @log       ||= Logger.new(STDOUT)
         @log.level = Logger::DEBUG
         @log
       end
