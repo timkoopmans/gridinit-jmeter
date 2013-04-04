@@ -304,23 +304,35 @@ module Gridinit
 
       def jmx(params={})
         file(params)
-        logger.info "JMX saved to: #{params[:file]}"
+        logger.info "Test plan saved to: #{params[:file]}"
       end
 
       def run(params={})
         file(params)
         logger.warn "Test executing locally ..."
         cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
-        logger.info cmd
-        `#{cmd} -q #{File.dirname(__FILE__)}/helpers/jmeter.properties`
+        logger.debug cmd
+        Open3.popen2e("#{cmd} -q #{File.dirname(__FILE__)}/helpers/jmeter.properties") do |stdin, stdout_err, wait_thr|
+          while line = stdout_err.gets
+            logger.debug line.chomp if params[:debug]
+          end
+
+          exit_status = wait_thr.value
+          unless exit_status.success?
+            abort "FAILED !!! #{cmd}"
+          end
+        end
         logger.info "Local Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
       end
 
       def grid(token, params={})
         if params[:region] == 'local'
+          logger.info "Starting test ..."
           params[:started] = Time.now
           run params 
           params[:completed] = Time.now
+          logger.info "Completed test ..."
+          logger.debug "Uploading results ..." if params[:debug]
         end
         RestClient.proxy = params[:proxy] if params[:proxy]
         begin
@@ -337,7 +349,7 @@ module Gridinit
             :started => params[:started],
             :completed => params[:completed]
           }
-          logger.info "Grid  Results at: #{JSON.parse(response)["results"]}" if response.code == 200
+          logger.info "Grid Results at: #{JSON.parse(response)["results"]}" if response.code == 200
         rescue => e
           logger.fatal "There was an error: #{e.message}"
         end

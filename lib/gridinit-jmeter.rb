@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'rest_client'
 require 'json'
 require 'cgi'
+require 'open3'
 
 # DSL
 require 'gridinit-jmeter/dsl'
