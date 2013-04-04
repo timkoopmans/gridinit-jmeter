@@ -311,7 +311,7 @@ module Gridinit
         file(params)
         logger.warn "Test executing locally ..."
         cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
-        logger.debug cmd
+        logger.debug cmd if params[:debug]
         Open3.popen2e("#{cmd} -q #{File.dirname(__FILE__)}/helpers/jmeter.properties") do |stdin, stdout_err, wait_thr|
           while line = stdout_err.gets
             logger.debug line.chomp if params[:debug]
