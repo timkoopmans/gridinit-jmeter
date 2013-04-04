@@ -302,13 +302,14 @@ module Gridinit
       def run(params={})
         file(params)
         logger.warn "Test executing locally ..."
-        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
+        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' } -q #{File.dirname(__FILE__)}/helpers/jmeter.properties"
         logger.info cmd
         `#{cmd}`
-        logger.info "Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
+        logger.info "Local Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
       end
 
       def grid(token, params={})
+        run params if params[:region] == 'local'
         RestClient.proxy = params[:proxy] if params[:proxy]
         begin
           file = Tempfile.new('jmeter')
@@ -317,11 +318,11 @@ module Gridinit
           response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
           {
             :name => 'attachment', 
-            :attachment => File.new("#{file.path}", 'rb'),
+            :attachment => File.new("#{params[:region] == 'local' ? (params[:jtl] ? params[:jtl] : 'jmeter.jtl') : file.path}", 'rb'),
             :multipart => true,
             :content_type => 'application/octet-stream'
           }
-          logger.info "Results at: #{JSON.parse(response)["results"]}" if response.code == 200
+          logger.info "Grid Results at: #{JSON.parse(response)["results"]}" if response.code == 200
         rescue => e
           logger.fatal "There was an error: #{e.message}"
         end
