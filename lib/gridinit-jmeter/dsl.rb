@@ -282,6 +282,14 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def gc_console_status_logger(name="jp@gc - Console Status Logger", params={}, &block)
+        node = Gridinit::Jmeter::GCConsoleStatusLogger.new(name, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
+      alias_method :console, :gc_console_status_logger
+
       def throughput_shaper(name="jp@gc - Throughput Shaping Timer", steps=[], params={}, &block)
         node = Gridinit::Jmeter::ThroughputShapingTimer.new(name, steps)
         attach_to_last(node, caller)
@@ -302,14 +310,18 @@ module Gridinit
       def run(params={})
         file(params)
         logger.warn "Test executing locally ..."
-        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' } -q #{File.dirname(__FILE__)}/helpers/jmeter.properties"
+        cmd = "#{params[:path]}jmeter -n -t #{params[:file]} -j #{params[:log] ? params[:log] : 'jmeter.log' } -l #{params[:jtl] ? params[:jtl] : 'jmeter.jtl' }"
         logger.info cmd
-        `#{cmd}`
+        `#{cmd} -q #{File.dirname(__FILE__)}/helpers/jmeter.properties`
         logger.info "Local Results at: #{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}"
       end
 
       def grid(token, params={})
-        run params if params[:region] == 'local'
+        if params[:region] == 'local'
+          params[:started] = Time.now
+          run params 
+          params[:completed] = Time.now
+        end
         RestClient.proxy = params[:proxy] if params[:proxy]
         begin
           file = Tempfile.new('jmeter')
@@ -321,9 +333,11 @@ module Gridinit
             :attachment => File.new("#{file.path}", 'rb'),
             :results => (File.new("#{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}", 'rb') if params[:region] == 'local'),
             :multipart => true,
-            :content_type => 'application/octet-stream'
+            :content_type => 'application/octet-stream',
+            :started => params[:started],
+            :completed => params[:completed]
           }
-          logger.info "Grid Results at: #{JSON.parse(response)["results"]}" if response.code == 200
+          logger.info "Grid  Results at: #{JSON.parse(response)["results"]}" if response.code == 200
         rescue => e
           logger.fatal "There was an error: #{e.message}"
         end

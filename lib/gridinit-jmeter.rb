@@ -95,6 +95,7 @@ require 'gridinit-jmeter/helpers/user-agents'
   require 'gridinit-jmeter/listeners/gc_response_times_over_time'
   require 'gridinit-jmeter/listeners/gc_response_times_percentiles'
   require 'gridinit-jmeter/listeners/gc_transactions_per_second'
+  require 'gridinit-jmeter/listeners/gc_console_status_logger'
 
 # LOGIC CONTROLLERS
   require 'gridinit-jmeter/controllers/transaction'
