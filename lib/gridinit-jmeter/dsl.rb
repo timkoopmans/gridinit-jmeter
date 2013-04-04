@@ -318,7 +318,8 @@ module Gridinit
           response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
           {
             :name => 'attachment', 
-            :attachment => File.new("#{params[:region] == 'local' ? (params[:jtl] ? params[:jtl] : 'jmeter.jtl') : file.path}", 'rb'),
+            :attachment => File.new("#{file.path}", 'rb'),
+            :results => (File.new("#{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}", 'rb') if params[:region] == 'local'),
             :multipart => true,
             :content_type => 'application/octet-stream'
           }
