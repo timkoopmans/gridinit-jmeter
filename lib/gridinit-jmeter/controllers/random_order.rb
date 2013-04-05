@@ -6,7 +6,7 @@ module Gridinit
       include Helper
       def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <RandomOrderController guiclass="RandomOrderControllerGui" testclass="RandomOrderController" testname="#{name}r" enabled="true"/>
+          <RandomOrderController guiclass="RandomOrderControllerGui" testclass="RandomOrderController" testname="#{name}" enabled="true"/>
         EOF
         update params
       end

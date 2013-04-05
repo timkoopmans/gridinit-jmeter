@@ -7,7 +7,7 @@ module Gridinit
       def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
 
-          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="#{name}" enabled="true">
+          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="#{name}" enabled="#{enabled(params)}">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
