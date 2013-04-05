@@ -29,7 +29,7 @@ module Gridinit
         EOF
         node = Gridinit::Jmeter::TestPlan.new
         @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children << hash_tree
-        
+
         variables(
           :name     => 'testguid',
           :value    => '${__P(testguid,${__time(,)})}',
@@ -144,7 +144,7 @@ module Gridinit
       end
 
       def visit(name="HTTP Request", url="", params={}, &block)
-        params[:method] = 'GET'
+        params[:method] = 'GET' if params[:method] == nil
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
@@ -329,7 +329,7 @@ module Gridinit
         if params[:region] == 'local'
           logger.info "Starting test ..."
           params[:started] = Time.now
-          run params 
+          run params
           params[:completed] = Time.now
           logger.info "Completed test ..."
           logger.debug "Uploading results ..." if params[:debug]
@@ -339,9 +339,9 @@ module Gridinit
           file = Tempfile.new('jmeter')
           file.write(doc.to_xml(:indent => 2))
           file.rewind
-          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}", 
+          response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}",
           {
-            :name => 'attachment', 
+            :name => 'attachment',
             :attachment => File.new("#{file.path}", 'rb'),
             :results => (File.new("#{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}", 'rb') if params[:region] == 'local'),
             :multipart => true,
@@ -354,7 +354,7 @@ module Gridinit
           logger.fatal "There was an error: #{e.message}"
         end
       end
-      
+
       private
 
       def hash_tree
@@ -397,7 +397,7 @@ module Gridinit
           '//GaussianRandomTimer/following-sibling::hashTree'
         when 'throughput_shaper'
           '//kg.apc.jmeter.timers.VariableThroughputTimer/following-sibling::hashTree'
-        else 
+        else
           '//TestPlan/following-sibling::hashTree'
         end
       end
