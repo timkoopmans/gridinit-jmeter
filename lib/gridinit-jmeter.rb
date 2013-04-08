@@ -76,7 +76,7 @@ require 'gridinit-jmeter/helpers/user-agents'
 # require 'gridinit-jmeter/post_processors/gc_inter_thread_communication_post_processor'
 # require 'gridinit-jmeter/post_processors/jsr223_post_processor'
   require 'gridinit-jmeter/post_processors/regex_extractor'
-# require 'gridinit-jmeter/post_processors/result_status_action_handler'  
+# require 'gridinit-jmeter/post_processors/result_status_action_handler'
   require 'gridinit-jmeter/post_processors/xpath_extractor'
 
 # ASSERTIONS
@@ -104,6 +104,7 @@ require 'gridinit-jmeter/helpers/user-agents'
   require 'gridinit-jmeter/controllers/if_controller'
   require 'gridinit-jmeter/controllers/loop_controller'
   require 'gridinit-jmeter/controllers/throughput'
+  require 'gridinit-jmeter/controllers/while_controller'
 
 # SAMPLERS
   require 'gridinit-jmeter/samplers/http_sampler'
