@@ -123,6 +123,11 @@ module Gridinit
         attach_node(node, &block)
       end
 
+      def Switch(name, switch_value, params={}, &block)
+        node = Gridinit::Jmeter::SwitchController.new(name, switch_value, params)
+        attach_node(node, &block)
+      end
+
       def counter(name="counter", params={}, &block)
         node = Gridinit::Jmeter::CounterConfig.new(name, params)
         attach_node(node, &block)
