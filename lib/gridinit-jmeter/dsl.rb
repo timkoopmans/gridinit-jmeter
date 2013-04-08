@@ -131,6 +131,12 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def While(condition, params={}, &block)
+        node = Gridinit::Jmeter::WhileController.new(condition, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
       def counter(name="counter", params={}, &block)
         node = Gridinit::Jmeter::CounterConfig.new(name, params)
         attach_to_last(node, caller)
@@ -381,6 +387,8 @@ module Gridinit
           '//IfController/following-sibling::hashTree'
         when 'Loop'
           '//LoopController/following-sibling::hashTree'
+        when 'While'
+          '//WhileController/following-sibling::hashTree'
         when 'counter'
           '//CounterConfig/following-sibling::hashTree'
         when 'bsh_pre'
