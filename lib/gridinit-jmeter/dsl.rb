@@ -133,6 +133,11 @@ module Gridinit
         attach_node(node, &block)
       end
 
+      def random_variable(name, min, max, params={}, &block)
+        node = Gridinit::Jmeter::RandomVariableConfig.new(name, min, max, params)
+        attach_node(node, &block)
+      end
+
       def random_order(name='Random Order Controller', params={}, &block)
         node = Gridinit::Jmeter::RandomOrderController.new(name, params)
         attach_node(node, &block)
