@@ -5,6 +5,7 @@ module Gridinit
       attr_accessor :doc
       include Helper
       def initialize(num_threads, params={})
+        params[:ramp_time] ||= num_threads/2
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
           <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
             <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -13,7 +14,7 @@ module Gridinit
               <stringProp name="LoopController.loops">1</stringProp>
             </elementProp>
             <stringProp name="ThreadGroup.num_threads">#{num_threads}</stringProp>
-            <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+            <stringProp name="ThreadGroup.ramp_time">#{params[:ramp_time]}</stringProp>
             <longProp name="ThreadGroup.start_time">1352677419000</longProp>
             <longProp name="ThreadGroup.end_time">1352677419000</longProp>
             <boolProp name="ThreadGroup.scheduler">false</boolProp>

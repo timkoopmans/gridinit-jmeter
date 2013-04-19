@@ -14,6 +14,8 @@ end
 group :development do
   gem 'pry'
   gem 'pry-nav'
+  gem 'pry-debugger'
+  gem 'awesome_print'
 end
 
 group :test do
