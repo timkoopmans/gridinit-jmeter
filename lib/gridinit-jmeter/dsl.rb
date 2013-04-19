@@ -170,7 +170,7 @@ module Gridinit
       alias_method :get, :visit
 
       def submit(name="HTTP Request", url="", params={}, &block)
-        params[:method] = 'POST'
+        params[:method] ||= 'POST'
         node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
         attach_node(node, &block)
       end
@@ -178,13 +178,13 @@ module Gridinit
       alias_method :post, :submit
 
       def delete(name="HTTP Request", url="", params={}, &block)
-        params[:method] = 'DELETE'
+        params[:method] ||= 'DELETE'
         node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
         attach_node(node, &block)
       end
 
       def put(name="HTTP Request", url="", params={}, &block)
-        params[:method] = 'PUT'
+        params[:method] ||= 'PUT'
         node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
         attach_node(node, &block)
       end
