@@ -4,10 +4,11 @@ module Gridinit
     class ViewResultsFullVisualizer
       attr_accessor :doc
       include Helper
+
       def initialize(name, params={})
         @doc = Nokogiri::XML(<<-EOF.strip_heredoc)
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="#{name}" enabled="true">
-            <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="#{name}" enabled="#{enabled(params)}">
+            <boolProp name="ResultCollector.error_logging">#{error_only(params)}</boolProp>
             <objProp>
               <name>saveConfig</name>
               <value class="SampleSaveConfiguration">
@@ -40,7 +41,17 @@ module Gridinit
         EOF
         update params
       end
-    end  
+
+      def error_only(params)
+        #default to true unless explicitly set to false
+        if params.has_key?(:error_only) && params[:error_only] == true
+          'true'
+        else
+          'false'
+        end
+      end
+    end
+
 
   end
 end
