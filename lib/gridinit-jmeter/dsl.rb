@@ -28,7 +28,10 @@ module Gridinit
           </jmeterTestPlan>
         EOF
         node = Gridinit::Jmeter::TestPlan.new
-        @root.at_xpath("//jmeterTestPlan/hashTree") << node.doc.children << hash_tree
+
+
+        @current_node = @root.at_xpath("//jmeterTestPlan/hashTree")
+        @current_node = attach_to_last(node)
 
         variables(
           :name     => 'testguid',
@@ -38,97 +41,87 @@ module Gridinit
 
       def variables(params={}, &block)
         node = Gridinit::Jmeter::UserDefinedVariable.new(params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def defaults(params={}, &block)
         node = Gridinit::Jmeter::RequestDefaults.new(params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def cookies(params={}, &block)
         node = Gridinit::Jmeter::CookieManager.new(params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def cache(params={}, &block)
         node = Gridinit::Jmeter::CacheManager.new(params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def header(params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def with_xhr(params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(
           params.merge('X-Requested-With' => 'XMLHttpRequest')
         )
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def with_user_agent(device, params={}, &block)
         node = Gridinit::Jmeter::HeaderManager.new(
           params.merge('User-Agent' => Gridinit::Jmeter::UserAgent.new(device).string)
         )
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def auth(params={}, &block)
         node = Gridinit::Jmeter::AuthManager.new(params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def threads(num_threads=1, params={}, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(num_threads, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def transaction(name="Transaction Contoller", params={}, &block)
         node = Gridinit::Jmeter::Transaction.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def exists(var, params={}, &block)
         params[:condition] = "'${#{var}}'.length > 0"
-        node = Gridinit::Jmeter::IfController.new("if #{var}", params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        node               = Gridinit::Jmeter::IfController.new("if #{var}", params)
+        attach_node(node, &block)
       end
 
       def once(name="do once", params={}, &block)
         node = Gridinit::Jmeter::OnceOnly.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def throughput(name="throughput", percent=100.0, params={}, &block)
         node = Gridinit::Jmeter::Throughput.new(name, percent, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
-      def If(name="If Controller", params={}, &block)
-        node = Gridinit::Jmeter::IfController.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+      def If(name="If Controller", condition="", params={}, &block)
+        node = Gridinit::Jmeter::IfController.new(name, condition, params)
+        attach_node(node, &block)
       end
 
       def Loop(loops=1, params={}, &block)
         node = Gridinit::Jmeter::LoopController.new(loops, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
+      end
+
+      def Switch(name, switch_value, params={}, &block)
+        node = Gridinit::Jmeter::SwitchController.new(name, switch_value, params)
+        attach_node(node, &block)
       end
 
       def While(condition, params={}, &block)
@@ -139,153 +132,170 @@ module Gridinit
 
       def counter(name="counter", params={}, &block)
         node = Gridinit::Jmeter::CounterConfig.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
+      end
+
+      def random_variable(name, min, max, params={}, &block)
+        node = Gridinit::Jmeter::RandomVariableConfig.new(name, min, max, params)
+        attach_node(node, &block)
+      end
+
+      def random_order(name='Random Order Controller', params={}, &block)
+        node = Gridinit::Jmeter::RandomOrderController.new(name, params)
+        attach_node(node, &block)
+      end
+
+      def interleave(name='Interleave Controller', params={}, &block)
+        node = Gridinit::Jmeter::InterleaveController.new(name, params)
+        attach_node(node, &block)
+      end
+
+      def simple(name='Simple Controller', params={}, &block)
+        node = Gridinit::Jmeter::SimpleController.new(name, params)
+        attach_node(node, &block)
       end
 
       def bsh_pre(script, params={}, &block)
         node = Gridinit::Jmeter::BeanShellPreProcessor.new(script, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def visit(name="HTTP Request", url="", params={}, &block)
-        params[:method] = 'GET' if params[:method] == nil
+        params[:method] ||= 'GET'
         node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
+        attach_node(node, &block)
       end
 
       alias_method :get, :visit
 
       def submit(name="HTTP Request", url="", params={}, &block)
-        params[:method] = 'POST'
-        node = Gridinit::Jmeter::HttpSampler.new(name, url, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        params[:method] ||= 'POST'
+        node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
+        attach_node(node, &block)
       end
 
       alias_method :post, :submit
 
+      def delete(name="HTTP Request", url="", params={}, &block)
+        params[:method] ||= 'DELETE'
+        node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
+        attach_node(node, &block)
+      end
+
+      def put(name="HTTP Request", url="", params={}, &block)
+        params[:method] ||= 'PUT'
+        node            = Gridinit::Jmeter::HttpSampler.new(name, url, params)
+        attach_node(node, &block)
+      end
+
       def extract(*args, &block)
         node = case args.first
-        when :regex
-          Gridinit::Jmeter::RegexExtractor.new(*args[1..-1])
-        when :xpath
-          Gridinit::Jmeter::XpathExtractor.new(*args[1..-1])
-        else
-          Gridinit::Jmeter::RegexExtractor.new(*args)
-        end
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+                 when :regex
+                   Gridinit::Jmeter::RegexExtractor.new(*args[1..-1])
+                 when :xpath
+                   Gridinit::Jmeter::XpathExtractor.new(*args[1..-1])
+                 else
+                   Gridinit::Jmeter::RegexExtractor.new(*args)
+               end
+        attach_node(node, &block)
       end
 
       alias_method :web_reg_save_param, :extract
 
       def random_timer(delay=0, range=0, &block)
         node = Gridinit::Jmeter::GaussianRandomTimer.new(delay, range)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :think_time, :random_timer
 
       def assert(match="contains", pattern="", params={}, &block)
         node = Gridinit::Jmeter::ResponseAssertion.new(match, pattern, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :web_reg_find, :assert
 
       def view_results_full_visualizer(name="View Results Tree", params={}, &block)
         node = Gridinit::Jmeter::ViewResultsFullVisualizer.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :view_results, :view_results_full_visualizer
 
       def table_visualizer(name="View Results in Table", params={}, &block)
         node = Gridinit::Jmeter::TableVisualizer.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def graph_visualizer(name="Graph Results", params={}, &block)
         node = Gridinit::Jmeter::GraphVisualizer.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def stat_visualizer(name="Stat Results", params={}, &block)
         node = Gridinit::Jmeter::StatVisualizer.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def simple_data_writer(name="Simple Data Writer", params={}, &block)
         node = Gridinit::Jmeter::SimpleDataWriter.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :log, :simple_data_writer
 
       def response_time_graph_visualizer(name="Reponse Time Graph", params={}, &block)
         node = Gridinit::Jmeter::ResponseTimeGraphVisualizer.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :response_graph, :response_time_graph_visualizer
 
       def summary_report(name="Summary Report", params={}, &block)
         node = Gridinit::Jmeter::SummaryReport.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
+      end
+
+      def aggregate_report(name="Aggregate Report", params={}, &block)
+        node = Gridinit::Jmeter::AggregateReport.new(name, params)
+        attach_node(node, &block)
       end
 
       def ldap_ext(name="LDAPExtSampler", params={}, &block)
         node = Gridinit::Jmeter::LDAPExtSampler.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_response_codes_per_second(name="jp@gc - Response Codes per Second", params={}, &block)
         node = Gridinit::Jmeter::GCResponseCodesPerSecond.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_response_times_distribution(name="jp@gc - Response Times Distribution", params={}, &block)
         node = Gridinit::Jmeter::GCResponseTimesDistribution.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_response_times_over_time(name="jp@gc - Response Times Over Time", params={}, &block)
         node = Gridinit::Jmeter::GCResponseTimesOverTime.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_response_times_percentiles(name="jp@gc - Response Times Percentiles", params={}, &block)
         node = Gridinit::Jmeter::GCResponseTimesPercentiles.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_transactions_per_second(name="jp@gc - Transactions per Second", params={}, &block)
         node = Gridinit::Jmeter::GCTransactionsPerSecond.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_latencies_over_time(name="jp@gc - Response Latencies Over Time", params={}, &block)
         node = Gridinit::Jmeter::GCLatenciesOverTime.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def gc_console_status_logger(name="jp@gc - Console Status Logger", params={}, &block)
@@ -298,8 +308,7 @@ module Gridinit
 
       def throughput_shaper(name="jp@gc - Throughput Shaping Timer", steps=[], params={}, &block)
         node = Gridinit::Jmeter::ThroughputShapingTimer.new(name, steps)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :shaper, :throughput_shaper
@@ -311,6 +320,14 @@ module Gridinit
       def jmx(params={})
         file(params)
         logger.info "Test plan saved to: #{params[:file]}"
+      end
+
+      def to_xml
+        doc.to_xml(:indent => 2)
+      end
+
+      def to_doc
+        doc.clone
       end
 
       def run(params={})
@@ -367,47 +384,19 @@ module Gridinit
         Nokogiri::XML::Node.new("hashTree", @root)
       end
 
-      def attach_to_last(node, calling_method)
-        xpath = xpath_from(calling_method)
-        last_node  = @root.xpath(xpath).last
-        last_node << node.doc.children << hash_tree
+      def attach_to_last(node)
+        ht        = hash_tree
+        last_node = @current_node
+        last_node << node.doc.children << ht
+        ht
       end
 
-      def xpath_from(calling_method)
-        case calling_method.grep(/dsl/)[1][/`.*'/][1..-2]
-        when 'threads'
-          '//ThreadGroup/following-sibling::hashTree'
-        when 'transaction'
-          '//TransactionController/following-sibling::hashTree'
-        when 'throughput'
-          '//ThroughputController/following-sibling::hashTree'
-        when 'once'
-          '//OnceOnlyController/following-sibling::hashTree'
-        when 'exists'
-          '//IfController/following-sibling::hashTree'
-        when 'Loop'
-          '//LoopController/following-sibling::hashTree'
-        when 'While'
-          '//WhileController/following-sibling::hashTree'
-        when 'counter'
-          '//CounterConfig/following-sibling::hashTree'
-        when 'bsh_pre'
-          '//BeanShellPreProcessor/following-sibling::hashTree'
-        when 'visit'
-          '//HTTPSamplerProxy/following-sibling::hashTree'
-        when 'submit'
-          '//HTTPSamplerProxy/following-sibling::hashTree'
-        when 'post'
-          '//HTTPSamplerProxy/following-sibling::hashTree'
-        when 'extract'
-          '//RegexExtractor/following-sibling::hashTree'
-        when 'random_timer'
-          '//GaussianRandomTimer/following-sibling::hashTree'
-        when 'throughput_shaper'
-          '//kg.apc.jmeter.timers.VariableThroughputTimer/following-sibling::hashTree'
-        else
-          '//TestPlan/following-sibling::hashTree'
-        end
+      def attach_node(node, &block)
+        ht            = attach_to_last(node)
+        previous      = @current_node
+        @current_node = ht
+        self.instance_exec(&block) if block
+        @current_node = previous
       end
 
       def file(params={})
@@ -416,11 +405,11 @@ module Gridinit
       end
 
       def doc
-        Nokogiri::XML(@root.to_s,&:noblanks)
+        Nokogiri::XML(@root.to_s, &:noblanks)
       end
 
       def logger
-        @log ||= Logger.new(STDOUT)
+        @log       ||= Logger.new(STDOUT)
         @log.level = Logger::DEBUG
         @log
       end

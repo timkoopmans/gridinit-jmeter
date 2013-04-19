@@ -10,7 +10,9 @@ module Gridinit
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <boolProp name="resetInterpreter">false</boolProp>
-            <stringProp name="script">#{script}</stringProp>
+            <stringProp name="script"><![CDATA[
+#{script}
+            ]]></stringProp>
           </BeanShellPreProcessor>
         EOF
         update params

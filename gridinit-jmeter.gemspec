@@ -17,6 +17,6 @@ Gem::Specification.new do |gem|
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   << 'grid'
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ["lib"]
+  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  gem.require_paths = ['lib']
 end
