@@ -1,5 +1,7 @@
 # Gridinit::Jmeter
 
+[![Code Climate](https://codeclimate.com/github/altentee/gridinit-jmeter.png)](https://codeclimate.com/github/altentee/gridinit-jmeter)
+
 Tired of using the JMeter GUI or looking at hairy XML files?
 
 This gem lets you write test plans for JMeter in your favourite text editor, and optionally run them on [Gridinit.com](http://gridinit.com). Here's some background on [why we think](http://www.slideshare.net/90kts/gridinit-jmeter) a DSL is necessary. Don't have Ruby? No problems, you can try out this DSL online in our [sandbox](http://sandbox.gridinit.com)
