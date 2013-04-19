@@ -1,7 +1,3 @@
-require 'ap'
-require 'pry'
-require 'pry-debugger'
-
 module Gridinit
 
   def dsl_eval(dsl, &block)
