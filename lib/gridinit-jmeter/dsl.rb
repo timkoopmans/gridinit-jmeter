@@ -156,9 +156,9 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
-      def soap(name="SOAP Request", url="", params={}, &block)
+      def soap(name="SOAP Request", params={}, &block)
         params[:method] = 'POST' if params[:method] == nil
-        node = Gridinit::Jmeter::SoapSampler.new(name, url, params)
+        node = Gridinit::Jmeter::SoapSampler.new(name, params)
         attach_to_last(node, caller)
         self.instance_exec(&block) if block
       end
