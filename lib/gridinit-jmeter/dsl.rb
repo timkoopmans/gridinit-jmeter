@@ -156,6 +156,13 @@ module Gridinit
         self.instance_exec(&block) if block
       end
 
+      def soap(name="SOAP Request", url="", params={}, &block)
+        params[:method] = 'POST' if params[:method] == nil
+        node = Gridinit::Jmeter::SoapSampler.new(name, url, params)
+        attach_to_last(node, caller)
+        self.instance_exec(&block) if block
+      end
+
       alias_method :get, :visit
 
       def submit(name="HTTP Request", url="", params={}, &block)
