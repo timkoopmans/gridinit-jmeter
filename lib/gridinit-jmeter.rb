@@ -109,3 +109,4 @@ require 'gridinit-jmeter/helpers/user-agents'
 # SAMPLERS
   require 'gridinit-jmeter/samplers/http_sampler'
   require 'gridinit-jmeter/samplers/ldap_ext_sampler'
+  require 'gridinit-jmeter/samplers/soap_sampler'
