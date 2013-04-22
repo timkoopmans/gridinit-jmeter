@@ -14,6 +14,10 @@ describe "DSL" do
     test {}.should respond_to :visit
   end
 
+  it "test plan should respond to soap" do
+    test {}.should respond_to :soap
+  end
+
   it "test plan should respond to submit" do
     test {}.should respond_to :submit
   end
@@ -21,12 +25,12 @@ describe "DSL" do
   it "should output a test plan to stdout" do
     $stdout.should_receive(:puts).with(/jmeterTestPlan/i)
     test do
-    end.jmx
+    end.out
   end
 
   it "should output a test plan to jmx file" do
     file = mock('file')
-    File.should_receive(:open).with("/tmp/jmeter.jmx", "w").and_yield(file)
+    File.should_receive(:open).with("jmeter.jmx", "w").and_yield(file)
     file.should_receive(:write).with(/jmeterTestPlan/i)
     test do
     end.jmx
