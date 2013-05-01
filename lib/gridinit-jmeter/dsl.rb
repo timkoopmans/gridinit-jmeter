@@ -126,8 +126,7 @@ module Gridinit
 
       def While(condition, params={}, &block)
         node = Gridinit::Jmeter::WhileController.new(condition, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       def counter(name="counter", params={}, &block)
