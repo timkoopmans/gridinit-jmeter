@@ -37,7 +37,12 @@ end.jmx
 So in this example, we just created a test plan, with 10 threads, each of which visited the search page at Google. 
 
 ### Generating a JMeter Test Plan (JMX)
-Note also how we called the `jmx` method of the test. Calling this method will write the contents of the JMeter test plan to screen (stdout) and also to a file like this.
+Note also how we called the `jmx` method of the test. Calling this method will write the contents of the JMeter test plan to file like this.
+
+```
+$ ruby testplan.rb
+[2013-04-23T10:29:03.275743 #42060]  INFO -- : Test plan saved to: jmeter.jmx
+```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -56,7 +61,7 @@ The file that is created can then be executed in the JMeter GUI. If you want to 
 ```ruby
 test do
   threads 10 do
-    visit 'Google Search', 'http://altentee.com'
+    visit 'Google Search', 'http://google.com'
   end
 end.jmx(file: "/tmp/my_testplan.jmx")
 ```
@@ -73,7 +78,7 @@ You can execute the JMeter test plan by calling the `run` method of the test lik
 ```ruby
 test do
   threads 10 do
-    visit 'Google Search', 'http://altentee.com'
+    visit 'Google Search', 'http://google.com'
   end
 end.run
 ```
@@ -83,7 +88,7 @@ This will launch JMeter in headless (non-GUI mode) and execute the test plan. Th
 ```ruby
 test do
   threads 10 do
-    visit 'Google Search', 'http://altentee.com'
+    visit 'Google Search', 'http://google.com'
   end
 end.run(
   path: '/usr/share/jmeter/bin/', 
@@ -101,7 +106,7 @@ To execute the test on the Grid, call the `grid` method on the test and pass it 
 ```ruby
 test do  
   threads 10 do
-    visit 'Google Search', 'http://altentee.com'  
+    visit 'Google Search', 'http://google.com'  
   end  
 end.grid('OxtZ-4v-v0koSz5Y0enEQQ')
 ```
@@ -223,21 +228,21 @@ end
 You can use the `visit` method to navigate to pages:
 
 ```ruby
-  visit 'Google Search', 'http://altentee.com'
+  visit 'Google Search', 'http://google.com'
 ```
 
 This method makes a single request and takes 3 parameters: the label, the URL and an optional parameters hash.
 
 ```ruby
-visit 'Google Search', 'http://altentee.com'
-visit 'Google Search', 'http://altentee.com', {
+visit 'Google Search', 'http://google.com'
+visit 'Google Search', 'http://google.com', {
   method: 'POST', 
   DO_MULTIPART_POST: 'true'
 }
-visit 'Google Search', 'http://altentee.com', {
+visit 'Google Search', 'http://google.com', {
   use_keepalive: 'false'
 }
-visit 'Google Search', 'http://altentee.com', {
+visit 'Google Search', 'http://google.com', {
   connect_timeout: '1000',
   response_timeout: '60000',
 }
