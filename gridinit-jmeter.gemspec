@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["support@gridinit.com"]
   gem.description   = %q{This is a Ruby based DSL for writing JMeter test plans}
   gem.summary       = %q{This is a Ruby based DSL for writing JMeter test plans}
-  gem.homepage      = ""
+  gem.homepage      = "http://github.com/altentee/gridinit-jmeter"
   gem.add_dependency("rest-client")
   gem.add_dependency("nokogiri")
   gem.add_runtime_dependency('json-jruby') if RUBY_PLATFORM == 'java'
