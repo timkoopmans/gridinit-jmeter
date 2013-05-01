@@ -300,8 +300,7 @@ module Gridinit
 
       def gc_console_status_logger(name="jp@gc - Console Status Logger", params={}, &block)
         node = Gridinit::Jmeter::GCConsoleStatusLogger.new(name, params)
-        attach_to_last(node, caller)
-        self.instance_exec(&block) if block
+        attach_node(node, &block)
       end
 
       alias_method :console, :gc_console_status_logger

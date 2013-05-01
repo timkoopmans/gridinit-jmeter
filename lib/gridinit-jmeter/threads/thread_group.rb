@@ -15,9 +15,9 @@ module Gridinit
             </elementProp>
             <stringProp name="ThreadGroup.num_threads">#{num_threads}</stringProp>
             <stringProp name="ThreadGroup.ramp_time">#{params[:ramp_time]}</stringProp>
-            <longProp name="ThreadGroup.start_time">1352677419000</longProp>
-            <longProp name="ThreadGroup.end_time">1352677419000</longProp>
-            <boolProp name="ThreadGroup.scheduler">false</boolProp>
+            <longProp name="ThreadGroup.start_time">#{Time.now.to_i * 1000}</longProp>
+            <longProp name="ThreadGroup.end_time">#{Time.now.to_i * 1000}</longProp>
+            <boolProp name="ThreadGroup.scheduler">true</boolProp>
             <stringProp name="ThreadGroup.duration"></stringProp>
             <stringProp name="ThreadGroup.delay"></stringProp>
           </ThreadGroup>
