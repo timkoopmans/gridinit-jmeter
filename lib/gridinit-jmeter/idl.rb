@@ -1,8 +1,13 @@
 #!/usr/bin/env ruby
 require 'nokogiri'
+require 'pathname'
+
 # require 'pry-debugger'
 
-file = File.open 'idl.xml'
+home = Pathname("..").expand_path(__FILE__)
+dsl  = File.join(home, "/dsl")
+
+file = File.open File.join(home, "idl.xml")
 doc = Nokogiri::XML file.read.gsub! /\n\s+/, ''
 nodes = doc.xpath '//jmeterTestPlan/hashTree'
 
@@ -31,8 +36,8 @@ end
 
 results.each do |element|
   klass = element.attributes['testname'].to_s.classify
-
-  File.open("idl/#{klass.underscore}.rb", 'w') { |file| file.write(<<EOC)
+  Dir.mkdir(dsl, 0700) unless Dir.exist? dsl
+  File.open("#{dsl}/#{klass.underscore}.rb", 'w') { |file| file.write(<<EOC)
 module Gridinit
   module Jmeter
 
