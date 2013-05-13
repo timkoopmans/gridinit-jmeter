@@ -9,7 +9,7 @@ module Gridinit
           <IfController guiclass="IfControllerPanel" testclass="IfController" testname="#{name}" enabled="true">
             <stringProp name="IfController.condition">#{params[:condition]}</stringProp>
             <boolProp name="IfController.evaluateAll">false</boolProp>
-            <boolProp name="IfController.useExpression">true</boolProp>
+            <boolProp name="IfController.useExpression">false</boolProp>
           </IfController>
         EOF
         update params
