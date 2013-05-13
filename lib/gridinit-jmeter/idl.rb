@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
+# This is an IDL script to translate a JMeter testplan into Ruby DSL objects
 require 'nokogiri'
 require 'pathname'
-
-# require 'pry-debugger'
 
 home = Pathname("..").expand_path(__FILE__)
 dsl  = File.join(home, "/dsl")
@@ -65,4 +64,3 @@ end
 EOC
 }
 end
-
