@@ -14,6 +14,10 @@ describe "DSL" do
     test {}.should respond_to :visit
   end
 
+  it "test plan should respond to soap" do
+    test {}.should respond_to :soap
+  end
+
   it "test plan should respond to submit" do
     test {}.should respond_to :submit
   end
