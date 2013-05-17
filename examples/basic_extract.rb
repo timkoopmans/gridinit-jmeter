@@ -2,15 +2,9 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gridinit-jmeter'
 
 test do
-
-  threads 100 do
-
-    visit 'Google', "http://google.com/" do
-      extract 'button_text', 'aria-label="(.+?)"'
-      extract :regex, 'button_text', 'aria-label="(.+?)"'
-      extract :xpath, 'button', '//button'
+  threads count: 100 do
+    visit name: 'Home', url: 'http://altentee.com' do
+      extract regex: "content='(.+?)' name='csrf-token'", name: 'csrf-token'
     end
-
   end
-
-end.jmx
+end.run(path: '/usr/share/jmeter/bin/', gui: true)
