@@ -129,6 +129,7 @@ module Gridinit
       # Controllers
 
       def transaction_controller(params={}, &block)
+        params = {name: params} if params.class == String
         params[:parent] ||= true
         params[:includeTimers] = params[:include_timers] || false
         super

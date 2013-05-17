@@ -13,14 +13,14 @@ test do
 
     random_timer 1000, 3000
 
-    transaction :name => '01_etsy_home' do
+    transaction '01_etsy_home' do
       visit :name => 'home', :url => 'http://www.etsy.com/' do
         assert 'contains' => 'Etsy - Your place to buy and sell all things handmade, vintage, and supplies'
       end
     end
 
     Once do
-      transaction :name => '02_etsy_signin' do
+      transaction '02_etsy_signin' do
         submit :name => 'signin', :url => 'https://www.etsy.com/signin',
           :fill_in => {
             :username    => 'tim.koops@gmail.com',
@@ -39,19 +39,19 @@ test do
 
     exists 'random_category' do
 
-      transaction :name => '03_etsy_browse_random_category' do
+      transaction '03_etsy_browse_random_category' do
         visit :name => 'browse', :url => '${random_category}' do
           extract :regex => 'a href="(http.+?subcat.+?)"', :name => 'random_sub_category'
         end
       end
 
-      transaction :name => '04_etsy_browse_random_sub_category' do
+      transaction '04_etsy_browse_random_sub_category' do
         visit :name => 'browse', :url => '${random_sub_category}' do
           extract :regex => 'a href="(/listing.+?)"', :name => 'random_listing'
         end
       end
 
-      transaction :name => '05_etsy_view_random_listing' do
+      transaction '05_etsy_view_random_listing' do
         visit :name => 'view', :url => '${random_listing}'
       end
 
