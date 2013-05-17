@@ -22,7 +22,7 @@ module Gridinit
   <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
   <boolProp name="Assertion.assume_success">false</boolProp>
   <intProp name="Assertion.test_type">2</intProp>
-  <stringProp name="Assertion.scope"/>
+  <stringProp name="Assertion.scope">all</stringProp>
 </ResponseAssertion>)
         EOS
         update params

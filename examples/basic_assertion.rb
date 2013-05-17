@@ -5,8 +5,8 @@ test do
   threads count: 2 do
     transaction name: 'Assertions' do
       visit name: 'Altentee', url: 'http://altentee.com/' do
-        # assert contains: 'We test, tune and secure your site'
-        # assert 'not-contains': 'Something in frames', scope: 'all'
+        assert contains: 'We test, tune and secure your site'
+        assert 'not-contains' => 'Something in frames', scope: 'children'
       end
     end
   end
