@@ -16,7 +16,14 @@ module Gridinit
         params[:name] ||= 'UserDefinedVariables'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
 <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="#{params[:name]}" enabled="true">
-  <collectionProp name="Arguments.arguments"/>
+  <collectionProp name="Arguments.arguments">
+    <elementProp name="testguid" elementType="Argument">
+      <stringProp name="Argument.name"/>
+      <stringProp name="Argument.value"/>
+      <stringProp name="Argument.metadata">=</stringProp>
+    </elementProp>
+  </collectionProp>
+  <stringProp name="TestPlan.comments"/>
 </Arguments>)
         EOS
         update params
