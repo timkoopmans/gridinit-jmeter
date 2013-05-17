@@ -41,8 +41,13 @@ module Gridinit
       alias_method :cache, :http_cache_manager
 
       def with_user_agent(device)
-        http_header_manager 'Header.name' => 'User-Agent', 
-                            'Header.value' => Gridinit::Jmeter::UserAgent.new(device).string
+        http_header_manager name: 'User-Agent', 
+                            value: Gridinit::Jmeter::UserAgent.new(device).string
+      end
+
+      def http_header_manager(params, &block)
+        params['Header.name'] = params[:name]
+        super
       end
 
       alias_method :header, :http_header_manager
@@ -99,8 +104,8 @@ module Gridinit
       end
 
       def with_xhr
-        http_header_manager 'Header.name' => 'X-Requested-With', 
-                            'Header.value' => 'XMLHttpRequest'
+        http_header_manager name: 'X-Requested-With', 
+                            value: 'XMLHttpRequest'
       end
 
       ##
