@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jdbc_request(params, &block)
+      def jdbc_request(params={}, &block)
         node = Gridinit::Jmeter::JdbcRequest.new(params)
         attach_node(node, &block)
       end

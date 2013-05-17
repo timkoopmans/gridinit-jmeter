@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def regex_user_parameters(params, &block)
+      def regex_user_parameters(params={}, &block)
         node = Gridinit::Jmeter::RegexUserParameters.new(params)
         attach_node(node, &block)
       end

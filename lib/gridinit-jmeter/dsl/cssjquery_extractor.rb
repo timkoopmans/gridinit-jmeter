@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def cssjquery_extractor(params, &block)
+      def cssjquery_extractor(params={}, &block)
         node = Gridinit::Jmeter::CssjqueryExtractor.new(params)
         attach_node(node, &block)
       end

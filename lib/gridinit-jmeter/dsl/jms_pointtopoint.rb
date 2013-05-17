@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jms_pointtopoint(params, &block)
+      def jms_pointtopoint(params={}, &block)
         node = Gridinit::Jmeter::JmsPointtopoint.new(params)
         attach_node(node, &block)
       end

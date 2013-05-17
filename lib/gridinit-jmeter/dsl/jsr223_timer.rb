@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_timer(params, &block)
+      def jsr223_timer(params={}, &block)
         node = Gridinit::Jmeter::Jsr223Timer.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_request_defaults(params, &block)
+      def http_request_defaults(params={}, &block)
         node = Gridinit::Jmeter::HttpRequestDefaults.new(params)
         attach_node(node, &block)
       end

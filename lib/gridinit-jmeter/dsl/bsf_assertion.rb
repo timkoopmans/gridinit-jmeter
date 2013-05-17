@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_assertion(params, &block)
+      def bsf_assertion(params={}, &block)
         node = Gridinit::Jmeter::BsfAssertion.new(params)
         attach_node(node, &block)
       end

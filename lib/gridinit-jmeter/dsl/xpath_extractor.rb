@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def xpath_extractor(params, &block)
+      def xpath_extractor(params={}, &block)
         node = Gridinit::Jmeter::XpathExtractor.new(params)
         attach_node(node, &block)
       end

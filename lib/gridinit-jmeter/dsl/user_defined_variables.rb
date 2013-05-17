@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def user_defined_variables(params, &block)
+      def user_defined_variables(params={}, &block)
         node = Gridinit::Jmeter::UserDefinedVariables.new(params)
         attach_node(node, &block)
       end

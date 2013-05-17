@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_listener(params, &block)
+      def jsr223_listener(params={}, &block)
         node = Gridinit::Jmeter::Jsr223Listener.new(params)
         attach_node(node, &block)
       end

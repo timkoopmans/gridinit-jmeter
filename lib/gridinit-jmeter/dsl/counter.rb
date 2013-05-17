@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def counter(params, &block)
+      def counter(params={}, &block)
         node = Gridinit::Jmeter::Counter.new(params)
         attach_node(node, &block)
       end

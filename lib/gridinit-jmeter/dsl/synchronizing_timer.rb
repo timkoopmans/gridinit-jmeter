@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def synchronizing_timer(params, &block)
+      def synchronizing_timer(params={}, &block)
         node = Gridinit::Jmeter::SynchronizingTimer.new(params)
         attach_node(node, &block)
       end

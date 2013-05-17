@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def md5hex_assertion(params, &block)
+      def md5hex_assertion(params={}, &block)
         node = Gridinit::Jmeter::Md5hexAssertion.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def mailer_visualizer(params, &block)
+      def mailer_visualizer(params={}, &block)
         node = Gridinit::Jmeter::MailerVisualizer.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def tcp_sampler_config(params, &block)
+      def tcp_sampler_config(params={}, &block)
         node = Gridinit::Jmeter::TcpSamplerConfig.new(params)
         attach_node(node, &block)
       end

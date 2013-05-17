@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def os_process_sampler(params, &block)
+      def os_process_sampler(params={}, &block)
         node = Gridinit::Jmeter::OsProcessSampler.new(params)
         attach_node(node, &block)
       end

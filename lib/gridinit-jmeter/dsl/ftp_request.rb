@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def ftp_request(params, &block)
+      def ftp_request(params={}, &block)
         node = Gridinit::Jmeter::FtpRequest.new(params)
         attach_node(node, &block)
       end

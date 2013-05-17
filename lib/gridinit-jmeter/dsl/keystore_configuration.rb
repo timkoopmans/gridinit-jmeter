@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def keystore_configuration(params, &block)
+      def keystore_configuration(params={}, &block)
         node = Gridinit::Jmeter::KeystoreConfiguration.new(params)
         attach_node(node, &block)
       end

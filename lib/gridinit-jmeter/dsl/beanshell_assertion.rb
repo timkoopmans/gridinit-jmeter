@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def beanshell_assertion(params, &block)
+      def beanshell_assertion(params={}, &block)
         node = Gridinit::Jmeter::BeanshellAssertion.new(params)
         attach_node(node, &block)
       end

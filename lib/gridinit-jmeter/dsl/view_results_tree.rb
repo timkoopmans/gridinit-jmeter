@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def view_results_tree(params, &block)
+      def view_results_tree(params={}, &block)
         node = Gridinit::Jmeter::ViewResultsTree.new(params)
         attach_node(node, &block)
       end

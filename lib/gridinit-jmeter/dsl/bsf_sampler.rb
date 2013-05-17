@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_sampler(params, &block)
+      def bsf_sampler(params={}, &block)
         node = Gridinit::Jmeter::BsfSampler.new(params)
         attach_node(node, &block)
       end

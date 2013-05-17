@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_authorization_manager(params, &block)
+      def http_authorization_manager(params={}, &block)
         node = Gridinit::Jmeter::HttpAuthorizationManager.new(params)
         attach_node(node, &block)
       end

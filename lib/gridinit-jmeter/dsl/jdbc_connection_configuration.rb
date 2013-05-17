@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jdbc_connection_configuration(params, &block)
+      def jdbc_connection_configuration(params={}, &block)
         node = Gridinit::Jmeter::JdbcConnectionConfiguration.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def test_action(params, &block)
+      def test_action(params={}, &block)
         node = Gridinit::Jmeter::TestAction.new(params)
         attach_node(node, &block)
       end

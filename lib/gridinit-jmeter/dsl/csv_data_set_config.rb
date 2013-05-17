@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def csv_data_set_config(params, &block)
+      def csv_data_set_config(params={}, &block)
         node = Gridinit::Jmeter::CsvDataSetConfig.new(params)
         attach_node(node, &block)
       end

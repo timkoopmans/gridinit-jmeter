@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def soapxmlrpc_request(params, &block)
+      def soapxmlrpc_request(params={}, &block)
         node = Gridinit::Jmeter::SoapxmlrpcRequest.new(params)
         attach_node(node, &block)
       end

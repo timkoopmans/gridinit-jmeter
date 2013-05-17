@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def beanshell_preprocessor(params, &block)
+      def beanshell_preprocessor(params={}, &block)
         node = Gridinit::Jmeter::BeanshellPreprocessor.new(params)
         attach_node(node, &block)
       end

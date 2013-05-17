@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def result_status_action_handler(params, &block)
+      def result_status_action_handler(params={}, &block)
         node = Gridinit::Jmeter::ResultStatusActionHandler.new(params)
         attach_node(node, &block)
       end

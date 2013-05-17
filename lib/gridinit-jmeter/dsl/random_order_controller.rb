@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def random_order_controller(params, &block)
+      def random_order_controller(params={}, &block)
         node = Gridinit::Jmeter::RandomOrderController.new(params)
         attach_node(node, &block)
       end

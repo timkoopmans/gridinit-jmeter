@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def while_controller(params, &block)
+      def while_controller(params={}, &block)
         node = Gridinit::Jmeter::WhileController.new(params)
         attach_node(node, &block)
       end

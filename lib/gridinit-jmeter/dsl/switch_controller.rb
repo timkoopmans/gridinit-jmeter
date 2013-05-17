@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def switch_controller(params, &block)
+      def switch_controller(params={}, &block)
         node = Gridinit::Jmeter::SwitchController.new(params)
         attach_node(node, &block)
       end

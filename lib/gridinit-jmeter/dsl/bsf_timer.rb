@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_timer(params, &block)
+      def bsf_timer(params={}, &block)
         node = Gridinit::Jmeter::BsfTimer.new(params)
         attach_node(node, &block)
       end

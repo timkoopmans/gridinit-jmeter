@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def aggregate_graph(params, &block)
+      def aggregate_graph(params={}, &block)
         node = Gridinit::Jmeter::AggregateGraph.new(params)
         attach_node(node, &block)
       end

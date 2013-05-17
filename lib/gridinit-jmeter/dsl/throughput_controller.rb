@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def throughput_controller(params, &block)
+      def throughput_controller(params={}, &block)
         node = Gridinit::Jmeter::ThroughputController.new(params)
         attach_node(node, &block)
       end

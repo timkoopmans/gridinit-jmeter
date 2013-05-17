@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def regular_expression_extractor(params, &block)
+      def regular_expression_extractor(params={}, &block)
         node = Gridinit::Jmeter::RegularExpressionExtractor.new(params)
         attach_node(node, &block)
       end

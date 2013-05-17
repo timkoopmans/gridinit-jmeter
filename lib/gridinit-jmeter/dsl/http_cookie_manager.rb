@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_cookie_manager(params, &block)
+      def http_cookie_manager(params={}, &block)
         node = Gridinit::Jmeter::HttpCookieManager.new(params)
         attach_node(node, &block)
       end

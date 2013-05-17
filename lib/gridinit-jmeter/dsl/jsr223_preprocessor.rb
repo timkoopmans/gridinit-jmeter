@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_preprocessor(params, &block)
+      def jsr223_preprocessor(params={}, &block)
         node = Gridinit::Jmeter::Jsr223Preprocessor.new(params)
         attach_node(node, &block)
       end

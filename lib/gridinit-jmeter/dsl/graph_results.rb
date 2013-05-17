@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def graph_results(params, &block)
+      def graph_results(params={}, &block)
         node = Gridinit::Jmeter::GraphResults.new(params)
         attach_node(node, &block)
       end

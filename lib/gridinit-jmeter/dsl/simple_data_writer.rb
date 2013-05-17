@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def simple_data_writer(params, &block)
+      def simple_data_writer(params={}, &block)
         node = Gridinit::Jmeter::SimpleDataWriter.new(params)
         attach_node(node, &block)
       end

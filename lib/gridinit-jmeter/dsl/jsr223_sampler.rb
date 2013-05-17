@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_sampler(params, &block)
+      def jsr223_sampler(params={}, &block)
         node = Gridinit::Jmeter::Jsr223Sampler.new(params)
         attach_node(node, &block)
       end

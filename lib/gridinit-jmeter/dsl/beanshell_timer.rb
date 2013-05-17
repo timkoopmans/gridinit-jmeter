@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def beanshell_timer(params, &block)
+      def beanshell_timer(params={}, &block)
         node = Gridinit::Jmeter::BeanshellTimer.new(params)
         attach_node(node, &block)
       end

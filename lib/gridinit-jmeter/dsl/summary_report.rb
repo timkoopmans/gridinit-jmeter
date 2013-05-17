@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def summary_report(params, &block)
+      def summary_report(params={}, &block)
         node = Gridinit::Jmeter::SummaryReport.new(params)
         attach_node(node, &block)
       end

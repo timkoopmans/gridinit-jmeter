@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def xpath_assertion(params, &block)
+      def xpath_assertion(params={}, &block)
         node = Gridinit::Jmeter::XpathAssertion.new(params)
         attach_node(node, &block)
       end

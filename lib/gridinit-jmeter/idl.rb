@@ -44,7 +44,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def #{klass.underscore}(params, &block)
+      def #{klass.underscore}(params={}, &block)
         node = Gridinit::Jmeter::#{klass}.new(params)
         attach_node(node, &block)
       end

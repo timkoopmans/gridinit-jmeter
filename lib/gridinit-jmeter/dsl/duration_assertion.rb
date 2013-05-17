@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def duration_assertion(params, &block)
+      def duration_assertion(params={}, &block)
         node = Gridinit::Jmeter::DurationAssertion.new(params)
         attach_node(node, &block)
       end

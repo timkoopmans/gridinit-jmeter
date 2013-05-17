@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def html_parameter_mask(params, &block)
+      def html_parameter_mask(params={}, &block)
         node = Gridinit::Jmeter::HtmlParameterMask.new(params)
         attach_node(node, &block)
       end

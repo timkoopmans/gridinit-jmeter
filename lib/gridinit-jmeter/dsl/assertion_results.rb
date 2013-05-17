@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def assertion_results(params, &block)
+      def assertion_results(params={}, &block)
         node = Gridinit::Jmeter::AssertionResults.new(params)
         attach_node(node, &block)
       end

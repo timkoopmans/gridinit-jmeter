@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def constant_timer(params, &block)
+      def constant_timer(params={}, &block)
         node = Gridinit::Jmeter::ConstantTimer.new(params)
         attach_node(node, &block)
       end

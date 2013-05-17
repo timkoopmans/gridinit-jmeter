@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def constant_throughput_timer(params, &block)
+      def constant_throughput_timer(params={}, &block)
         node = Gridinit::Jmeter::ConstantThroughputTimer.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def spline_visualizer(params, &block)
+      def spline_visualizer(params={}, &block)
         node = Gridinit::Jmeter::SplineVisualizer.new(params)
         attach_node(node, &block)
       end

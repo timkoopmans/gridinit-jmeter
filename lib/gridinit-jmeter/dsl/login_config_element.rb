@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def login_config_element(params, &block)
+      def login_config_element(params={}, &block)
         node = Gridinit::Jmeter::LoginConfigElement.new(params)
         attach_node(node, &block)
       end

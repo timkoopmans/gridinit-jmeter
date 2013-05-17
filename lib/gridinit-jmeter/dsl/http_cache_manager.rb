@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_cache_manager(params, &block)
+      def http_cache_manager(params={}, &block)
         node = Gridinit::Jmeter::HttpCacheManager.new(params)
         attach_node(node, &block)
       end

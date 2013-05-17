@@ -2,7 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gridinit-jmeter'
 
 test do
-  threads 100 do # threads = RPS * <max response time ms> / 1000
+  threads count: 100 do # threads = RPS * <max response time ms> / 1000
 
     throughput_shaper 'increasing load test', [
       { :start_rps => 100, :end_rps => 100, :duration => 60 },
@@ -13,9 +13,9 @@ test do
       { :start_rps => 600, :end_rps => 600, :duration => 60 }
     ]
 
-    transaction 'Google Search' do
-      visit 'Home Page', 'http://google.com/'
+    transaction name: 'Google Search' do
+      visit name: 'Home Page', url: 'http://google.com/'
     end
 
   end
-end.jmx
+end.run(path: '/usr/share/jmeter/bin/', gui: true)

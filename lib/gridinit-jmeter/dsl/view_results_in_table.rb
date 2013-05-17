@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def view_results_in_table(params, &block)
+      def view_results_in_table(params={}, &block)
         node = Gridinit::Jmeter::ViewResultsInTable.new(params)
         attach_node(node, &block)
       end

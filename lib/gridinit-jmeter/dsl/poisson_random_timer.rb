@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def poisson_random_timer(params, &block)
+      def poisson_random_timer(params={}, &block)
         node = Gridinit::Jmeter::PoissonRandomTimer.new(params)
         attach_node(node, &block)
       end

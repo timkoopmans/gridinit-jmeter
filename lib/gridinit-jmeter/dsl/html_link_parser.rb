@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def html_link_parser(params, &block)
+      def html_link_parser(params={}, &block)
         node = Gridinit::Jmeter::HtmlLinkParser.new(params)
         attach_node(node, &block)
       end

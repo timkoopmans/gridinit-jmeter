@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def if_controller(params, &block)
+      def if_controller(params={}, &block)
         node = Gridinit::Jmeter::IfController.new(params)
         attach_node(node, &block)
       end

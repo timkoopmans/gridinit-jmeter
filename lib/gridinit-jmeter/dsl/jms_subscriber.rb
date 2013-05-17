@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jms_subscriber(params, &block)
+      def jms_subscriber(params={}, &block)
         node = Gridinit::Jmeter::JmsSubscriber.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def uniform_random_timer(params, &block)
+      def uniform_random_timer(params={}, &block)
         node = Gridinit::Jmeter::UniformRandomTimer.new(params)
         attach_node(node, &block)
       end

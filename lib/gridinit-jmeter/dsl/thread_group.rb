@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def thread_group(params, &block)
+      def thread_group(params={}, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(params)
         attach_node(node, &block)
       end

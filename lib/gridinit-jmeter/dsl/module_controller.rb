@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def module_controller(params, &block)
+      def module_controller(params={}, &block)
         node = Gridinit::Jmeter::ModuleController.new(params)
         attach_node(node, &block)
       end

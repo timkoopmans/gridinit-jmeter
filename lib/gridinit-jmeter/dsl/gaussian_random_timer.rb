@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def gaussian_random_timer(params, &block)
+      def gaussian_random_timer(params={}, &block)
         node = Gridinit::Jmeter::GaussianRandomTimer.new(params)
         attach_node(node, &block)
       end

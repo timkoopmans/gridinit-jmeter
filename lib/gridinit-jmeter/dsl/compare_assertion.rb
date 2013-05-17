@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def compare_assertion(params, &block)
+      def compare_assertion(params={}, &block)
         node = Gridinit::Jmeter::CompareAssertion.new(params)
         attach_node(node, &block)
       end

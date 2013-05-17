@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def beanshell_sampler(params, &block)
+      def beanshell_sampler(params={}, &block)
         node = Gridinit::Jmeter::BeanshellSampler.new(params)
         attach_node(node, &block)
       end

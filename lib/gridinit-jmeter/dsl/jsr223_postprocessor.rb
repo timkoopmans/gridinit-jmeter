@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_postprocessor(params, &block)
+      def jsr223_postprocessor(params={}, &block)
         node = Gridinit::Jmeter::Jsr223Postprocessor.new(params)
         attach_node(node, &block)
       end

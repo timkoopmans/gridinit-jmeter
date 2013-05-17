@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jdbc_preprocessor(params, &block)
+      def jdbc_preprocessor(params={}, &block)
         node = Gridinit::Jmeter::JdbcPreprocessor.new(params)
         attach_node(node, &block)
       end

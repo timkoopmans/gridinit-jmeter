@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_url_rewriting_modifier(params, &block)
+      def http_url_rewriting_modifier(params={}, &block)
         node = Gridinit::Jmeter::HttpUrlRewritingModifier.new(params)
         attach_node(node, &block)
       end

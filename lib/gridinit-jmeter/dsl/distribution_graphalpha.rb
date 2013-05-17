@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def distribution_graphalpha(params, &block)
+      def distribution_graphalpha(params={}, &block)
         node = Gridinit::Jmeter::DistributionGraphalpha.new(params)
         attach_node(node, &block)
       end

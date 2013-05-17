@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_preprocessor(params, &block)
+      def bsf_preprocessor(params={}, &block)
         node = Gridinit::Jmeter::BsfPreprocessor.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_header_manager(params, &block)
+      def http_header_manager(params={}, &block)
         node = Gridinit::Jmeter::HttpHeaderManager.new(params)
         attach_node(node, &block)
       end

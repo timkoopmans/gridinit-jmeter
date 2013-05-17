@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def access_log_sampler(params, &block)
+      def access_log_sampler(params={}, &block)
         node = Gridinit::Jmeter::AccessLogSampler.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def random_variable(params, &block)
+      def random_variable(params={}, &block)
         node = Gridinit::Jmeter::RandomVariable.new(params)
         attach_node(node, &block)
       end

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def mail_reader_sampler(params, &block)
+      def mail_reader_sampler(params={}, &block)
         node = Gridinit::Jmeter::MailReaderSampler.new(params)
         attach_node(node, &block)
       end

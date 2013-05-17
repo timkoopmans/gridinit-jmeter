@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def save_responses_to_a_file(params, &block)
+      def save_responses_to_a_file(params={}, &block)
         node = Gridinit::Jmeter::SaveResponsesToAFile.new(params)
         attach_node(node, &block)
       end

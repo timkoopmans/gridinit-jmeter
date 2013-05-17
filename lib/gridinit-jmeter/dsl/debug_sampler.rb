@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def debug_sampler(params, &block)
+      def debug_sampler(params={}, &block)
         node = Gridinit::Jmeter::DebugSampler.new(params)
         attach_node(node, &block)
       end
