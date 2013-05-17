@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def xml_schema_assertion(params={}, &block)
+      def xml_schema_assertion(params, &block)
         node = Gridinit::Jmeter::XmlSchemaAssertion.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,15 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'XmlSchemaAssertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<XMLSchemaAssertion guiclass="XMLSchemaAssertionGUI" testclass="XMLSchemaAssertion" testname="#{name}" enabled="true">
+<XMLSchemaAssertion guiclass="XMLSchemaAssertionGUI" testclass="XMLSchemaAssertion" testname="#{params[:name]}" enabled="true">
   <stringProp name="xmlschema_assertion_filename"/>
 </XMLSchemaAssertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

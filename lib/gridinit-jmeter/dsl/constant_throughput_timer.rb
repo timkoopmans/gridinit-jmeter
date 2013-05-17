@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def constant_throughput_timer(params={}, &block)
+      def constant_throughput_timer(params, &block)
         node = Gridinit::Jmeter::ConstantThroughputTimer.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'ConstantThroughputTimer'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="#{name}" enabled="true">
+<ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="#{params[:name]}" enabled="true">
   <stringProp name="calcMode">this thread only</stringProp>
   <doubleProp>
     <name>throughput</name>
@@ -24,6 +25,7 @@ module Gridinit
 </ConstantThroughputTimer>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

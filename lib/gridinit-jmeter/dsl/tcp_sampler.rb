@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def tcp_sampler(params={}, &block)
+      def tcp_sampler(params, &block)
         node = Gridinit::Jmeter::TcpSampler.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'TcpSampler'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="#{name}" enabled="true">
+<TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="TCPSampler.server"/>
   <boolProp name="TCPSampler.reUseConnection">true</boolProp>
   <stringProp name="TCPSampler.port"/>
@@ -27,6 +28,7 @@ module Gridinit
 </TCPSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def smtp_sampler(params={}, &block)
+      def smtp_sampler(params, &block)
         node = Gridinit::Jmeter::SmtpSampler.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'SmtpSampler'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<SmtpSampler guiclass="SmtpSamplerGui" testclass="SmtpSampler" testname="#{name}" enabled="true">
+<SmtpSampler guiclass="SmtpSamplerGui" testclass="SmtpSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="SMTPSampler.server"/>
   <stringProp name="SMTPSampler.serverPort"/>
   <stringProp name="SMTPSampler.mailFrom"/>
@@ -45,6 +46,7 @@ module Gridinit
 </SmtpSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def junit_request(params={}, &block)
+      def junit_request(params, &block)
         node = Gridinit::Jmeter::JunitRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'JunitRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JUnitSampler guiclass="JUnitTestSamplerGui" testclass="JUnitSampler" testname="#{name}" enabled="true">
+<JUnitSampler guiclass="JUnitTestSamplerGui" testclass="JUnitSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="junitSampler.classname">test.RerunTest</stringProp>
   <stringProp name="junitsampler.constructorstring"/>
   <stringProp name="junitsampler.method">testRerun</stringProp>
@@ -31,6 +32,7 @@ module Gridinit
 </JUnitSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def thread_group(params={}, &block)
+      def thread_group(params, &block)
         node = Gridinit::Jmeter::ThreadGroup.new(params)
         attach_node(node, &block)
       end
@@ -12,11 +12,12 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'ThreadGroup'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="#{name}" enabled="true">
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="#{params[:name]}" enabled="true">
   <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-  <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="#{name}" enabled="true">
+  <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="#{params[:name]}" enabled="true">
     <boolProp name="LoopController.continue_forever">false</boolProp>
     <stringProp name="LoopController.loops">1</stringProp>
   </elementProp>
@@ -30,6 +31,7 @@ module Gridinit
 </ThreadGroup>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

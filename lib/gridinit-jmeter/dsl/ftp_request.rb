@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def ftp_request(params={}, &block)
+      def ftp_request(params, &block)
         node = Gridinit::Jmeter::FtpRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'FtpRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<FTPSampler guiclass="FtpTestSamplerGui" testclass="FTPSampler" testname="#{name}" enabled="true">
+<FTPSampler guiclass="FtpTestSamplerGui" testclass="FTPSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="FTPSampler.server"/>
   <stringProp name="FTPSampler.port"/>
   <stringProp name="FTPSampler.filename"/>
@@ -28,6 +29,7 @@ module Gridinit
 </FTPSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

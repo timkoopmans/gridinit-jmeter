@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def compare_assertion(params={}, &block)
+      def compare_assertion(params, &block)
         node = Gridinit::Jmeter::CompareAssertion.new(params)
         attach_node(node, &block)
       end
@@ -12,15 +12,17 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'CompareAssertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<CompareAssertion guiclass="TestBeanGUI" testclass="CompareAssertion" testname="#{name}" enabled="true">
+<CompareAssertion guiclass="TestBeanGUI" testclass="CompareAssertion" testname="#{params[:name]}" enabled="true">
   <boolProp name="compareContent">true</boolProp>
   <longProp name="compareTime">-1</longProp>
   <collectionProp name="stringsToSkip"/>
 </CompareAssertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

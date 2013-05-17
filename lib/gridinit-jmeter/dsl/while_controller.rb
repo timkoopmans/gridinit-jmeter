@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def while_controller(params={}, &block)
+      def while_controller(params, &block)
         node = Gridinit::Jmeter::WhileController.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,15 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'WhileController'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="#{name}" enabled="true">
+<WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="#{params[:name]}" enabled="true">
   <stringProp name="WhileController.condition"/>
 </WhileController>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

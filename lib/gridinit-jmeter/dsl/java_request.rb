@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def java_request(params={}, &block)
+      def java_request(params, &block)
         node = Gridinit::Jmeter::JavaRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'JavaRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="#{name}" enabled="true">
+<JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="#{params[:name]}" enabled="true">
   <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
     <collectionProp name="Arguments.arguments">
       <elementProp name="Sleep_Time" elementType="Argument">
@@ -63,6 +64,7 @@ module Gridinit
 </JavaSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

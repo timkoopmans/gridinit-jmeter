@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def ldap_extended_request(params={}, &block)
+      def ldap_extended_request(params, &block)
         node = Gridinit::Jmeter::LdapExtendedRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'LdapExtendedRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<LDAPExtSampler guiclass="LdapExtTestSamplerGui" testclass="LDAPExtSampler" testname="#{name}" enabled="true">
+<LDAPExtSampler guiclass="LdapExtTestSamplerGui" testclass="LDAPExtSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="servername"/>
   <stringProp name="port"/>
   <stringProp name="rootdn"/>
@@ -36,6 +37,7 @@ module Gridinit
 </LDAPExtSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

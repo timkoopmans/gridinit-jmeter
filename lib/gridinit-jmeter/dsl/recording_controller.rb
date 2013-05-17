@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def recording_controller(params={}, &block)
+      def recording_controller(params, &block)
         node = Gridinit::Jmeter::RecordingController.new(params)
         attach_node(node, &block)
       end
@@ -12,11 +12,13 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'RecordingController'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<RecordingController guiclass="RecordController" testclass="RecordingController" testname="#{name}" enabled="true"/>)
+<RecordingController guiclass="RecordController" testclass="RecordingController" testname="#{params[:name]}" enabled="true"/>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

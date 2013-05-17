@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_header_manager(params={}, &block)
+      def http_header_manager(params, &block)
         node = Gridinit::Jmeter::HttpHeaderManager.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,20 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'HttpHeaderManager'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="#{name}" enabled="true">
-  <collectionProp name="HeaderManager.headers"/>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="#{params[:name]}" enabled="true">
+  <collectionProp name="HeaderManager.headers">
+    <elementProp name="" elementType="Header">
+      <stringProp name="Header.name"/>
+      <stringProp name="Header.value"/>
+    </elementProp>
+  </collectionProp>
 </HeaderManager>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

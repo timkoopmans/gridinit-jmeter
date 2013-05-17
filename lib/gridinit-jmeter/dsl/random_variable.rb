@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def random_variable(params={}, &block)
+      def random_variable(params, &block)
         node = Gridinit::Jmeter::RandomVariable.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'RandomVariable'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="#{name}" enabled="true">
+<RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="#{params[:name]}" enabled="true">
   <stringProp name="maximumValue"/>
   <stringProp name="minimumValue">1</stringProp>
   <stringProp name="outputFormat"/>
@@ -24,6 +25,7 @@ module Gridinit
 </RandomVariableConfig>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

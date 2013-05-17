@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_url_rewriting_modifier(params={}, &block)
+      def http_url_rewriting_modifier(params, &block)
         node = Gridinit::Jmeter::HttpUrlRewritingModifier.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'HttpUrlRewritingModifier'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<URLRewritingModifier guiclass="URLRewritingModifierGui" testclass="URLRewritingModifier" testname="#{name}" enabled="true">
+<URLRewritingModifier guiclass="URLRewritingModifierGui" testclass="URLRewritingModifier" testname="#{params[:name]}" enabled="true">
   <stringProp name="argument_name"/>
   <boolProp name="path_extension">false</boolProp>
   <boolProp name="path_extension_no_equals">false</boolProp>
@@ -23,6 +24,7 @@ module Gridinit
 </URLRewritingModifier>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

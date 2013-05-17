@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_timer(params={}, &block)
+      def bsf_timer(params, &block)
         node = Gridinit::Jmeter::BsfTimer.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'BsfTimer'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<BSFTimer guiclass="TestBeanGUI" testclass="BSFTimer" testname="#{name}" enabled="true">
+<BSFTimer guiclass="TestBeanGUI" testclass="BSFTimer" testname="#{params[:name]}" enabled="true">
   <stringProp name="filename"/>
   <stringProp name="parameters"/>
   <stringProp name="script"/>
@@ -22,6 +23,7 @@ module Gridinit
 </BSFTimer>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

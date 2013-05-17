@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def beanshell_timer(params={}, &block)
+      def beanshell_timer(params, &block)
         node = Gridinit::Jmeter::BeanshellTimer.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'BeanshellTimer'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="#{name}" enabled="true">
+<BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="#{params[:name]}" enabled="true">
   <stringProp name="filename"/>
   <stringProp name="parameters"/>
   <boolProp name="resetInterpreter">false</boolProp>
@@ -22,6 +23,7 @@ module Gridinit
 </BeanShellTimer>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

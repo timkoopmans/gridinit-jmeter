@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jms_subscriber(params={}, &block)
+      def jms_subscriber(params, &block)
         node = Gridinit::Jmeter::JmsSubscriber.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'JmsSubscriber'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<SubscriberSampler guiclass="JMSSubscriberGui" testclass="SubscriberSampler" testname="#{name}" enabled="true">
+<SubscriberSampler guiclass="JMSSubscriberGui" testclass="SubscriberSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="jms.jndi_properties">false</stringProp>
   <stringProp name="jms.initial_context_factory"/>
   <stringProp name="jms.provider_url"/>
@@ -29,6 +30,7 @@ module Gridinit
 </SubscriberSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

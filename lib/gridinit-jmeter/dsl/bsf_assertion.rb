@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_assertion(params={}, &block)
+      def bsf_assertion(params, &block)
         node = Gridinit::Jmeter::BsfAssertion.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'BsfAssertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="#{name}" enabled="true">
+<BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="#{params[:name]}" enabled="true">
   <stringProp name="filename"/>
   <stringProp name="parameters"/>
   <stringProp name="script"/>
@@ -22,6 +23,7 @@ module Gridinit
 </BSFAssertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

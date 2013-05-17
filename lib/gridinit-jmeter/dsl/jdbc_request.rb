@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jdbc_request(params={}, &block)
+      def jdbc_request(params, &block)
         node = Gridinit::Jmeter::JdbcRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'JdbcRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="#{name}" enabled="true">
+<JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="dataSource"/>
   <stringProp name="query"/>
   <stringProp name="queryArguments"/>
@@ -25,6 +26,7 @@ module Gridinit
 </JDBCSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

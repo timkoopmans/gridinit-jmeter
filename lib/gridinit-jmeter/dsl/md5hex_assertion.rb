@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def md5hex_assertion(params={}, &block)
+      def md5hex_assertion(params, &block)
         node = Gridinit::Jmeter::Md5hexAssertion.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,15 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'Md5hexAssertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<MD5HexAssertion guiclass="MD5HexAssertionGUI" testclass="MD5HexAssertion" testname="#{name}" enabled="true">
+<MD5HexAssertion guiclass="MD5HexAssertionGUI" testclass="MD5HexAssertion" testname="#{params[:name]}" enabled="true">
   <stringProp name="MD5HexAssertion.size"/>
 </MD5HexAssertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

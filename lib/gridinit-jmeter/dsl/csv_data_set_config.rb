@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def csv_data_set_config(params={}, &block)
+      def csv_data_set_config(params, &block)
         node = Gridinit::Jmeter::CsvDataSetConfig.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'CsvDataSetConfig'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="#{name}" enabled="true">
+<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="#{params[:name]}" enabled="true">
   <stringProp name="delimiter">,</stringProp>
   <stringProp name="fileEncoding"/>
   <stringProp name="filename"/>
@@ -26,6 +27,7 @@ module Gridinit
 </CSVDataSet>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

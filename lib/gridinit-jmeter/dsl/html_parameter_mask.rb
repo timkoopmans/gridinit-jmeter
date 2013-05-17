@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def html_parameter_mask(params={}, &block)
+      def html_parameter_mask(params, &block)
         node = Gridinit::Jmeter::HtmlParameterMask.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'HtmlParameterMask'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ParamModifier guiclass="ParamModifierGui" testclass="ParamModifier" testname="#{name}" enabled="true">
+<ParamModifier guiclass="ParamModifierGui" testclass="ParamModifier" testname="#{params[:name]}" enabled="true">
   <elementProp name="ParamModifier.mask" elementType="ParamMask">
     <stringProp name="ParamModifier.field_name"/>
     <stringProp name="ParamModifier.prefix"/>
@@ -26,6 +27,7 @@ module Gridinit
 </ParamModifier>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

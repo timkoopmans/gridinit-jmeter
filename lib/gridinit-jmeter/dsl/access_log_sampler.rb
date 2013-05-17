@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def access_log_sampler(params={}, &block)
+      def access_log_sampler(params, &block)
         node = Gridinit::Jmeter::AccessLogSampler.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'AccessLogSampler'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<AccessLogSampler guiclass="TestBeanGUI" testclass="AccessLogSampler" testname="#{name}" enabled="true">
+<AccessLogSampler guiclass="TestBeanGUI" testclass="AccessLogSampler" testname="#{params[:name]}" enabled="true">
   <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
     <collectionProp name="Arguments.arguments"/>
   </elementProp>
@@ -26,6 +27,7 @@ module Gridinit
 </AccessLogSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

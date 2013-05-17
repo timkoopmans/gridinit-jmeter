@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def soapxmlrpc_request(params={}, &block)
+      def soapxmlrpc_request(params, &block)
         node = Gridinit::Jmeter::SoapxmlrpcRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'SoapxmlrpcRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="#{name}" enabled="true">
+<SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="#{params[:name]}" enabled="true">
   <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
     <collectionProp name="Arguments.arguments"/>
   </elementProp>
@@ -27,6 +28,7 @@ module Gridinit
 </SoapSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

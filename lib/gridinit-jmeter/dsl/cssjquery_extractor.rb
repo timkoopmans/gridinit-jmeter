@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def cssjquery_extractor(params={}, &block)
+      def cssjquery_extractor(params, &block)
         node = Gridinit::Jmeter::CssjqueryExtractor.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'CssjqueryExtractor'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="#{name}" enabled="true">
+<HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="#{params[:name]}" enabled="true">
   <stringProp name="HtmlExtractor.refname"/>
   <stringProp name="HtmlExtractor.expr"/>
   <stringProp name="HtmlExtractor.attribute"/>
@@ -24,6 +25,7 @@ module Gridinit
 </HtmlExtractor>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

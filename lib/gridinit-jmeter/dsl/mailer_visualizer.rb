@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def mailer_visualizer(params={}, &block)
+      def mailer_visualizer(params, &block)
         node = Gridinit::Jmeter::MailerVisualizer.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'MailerVisualizer'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<MailerResultCollector guiclass="MailerVisualizer" testclass="MailerResultCollector" testname="#{name}" enabled="true">
+<MailerResultCollector guiclass="MailerVisualizer" testclass="MailerResultCollector" testname="#{params[:name]}" enabled="true">
   <boolProp name="ResultCollector.error_logging">false</boolProp>
   <objProp>
     <name>saveConfig</name>
@@ -58,6 +59,7 @@ module Gridinit
 </MailerResultCollector>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

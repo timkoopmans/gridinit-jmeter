@@ -17,9 +17,16 @@ module Gridinit
   module Jmeter
     module Helper
       def update(params)
+        params.delete(:name)
         params.each do |name, value|
           node = @doc.children.xpath("//*[contains(@name,\"#{name.to_s}\")]")
           node.first.content = value unless node.empty?
+        end
+      end
+
+      def update_at_xpath(params)
+        params[:update_at_xpath].each do |fragment|
+          @doc.at_xpath(fragment[:xpath]) << fragment[:value]
         end
       end
 

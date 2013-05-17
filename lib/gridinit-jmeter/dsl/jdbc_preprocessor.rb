@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jdbc_preprocessor(params={}, &block)
+      def jdbc_preprocessor(params, &block)
         node = Gridinit::Jmeter::JdbcPreprocessor.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'JdbcPreprocessor'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="#{name}" enabled="true">
+<JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="#{params[:name]}" enabled="true">
   <stringProp name="dataSource"/>
   <stringProp name="query"/>
   <stringProp name="queryArguments"/>
@@ -25,6 +26,7 @@ module Gridinit
 </JDBCPreProcessor>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def switch_controller(params={}, &block)
+      def switch_controller(params, &block)
         node = Gridinit::Jmeter::SwitchController.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,15 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'SwitchController'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<SwitchController guiclass="SwitchControllerGui" testclass="SwitchController" testname="#{name}" enabled="true">
+<SwitchController guiclass="SwitchControllerGui" testclass="SwitchController" testname="#{params[:name]}" enabled="true">
   <stringProp name="SwitchController.value"/>
 </SwitchController>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_assertion(params={}, &block)
+      def jsr223_assertion(params, &block)
         node = Gridinit::Jmeter::Jsr223Assertion.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'Jsr223Assertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="#{name}" enabled="true">
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="#{params[:name]}" enabled="true">
   <stringProp name="scriptLanguage"/>
   <stringProp name="parameters"/>
   <stringProp name="filename"/>
@@ -23,6 +24,7 @@ module Gridinit
 </JSR223Assertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

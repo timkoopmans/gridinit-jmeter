@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def user_parameters(params={}, &block)
+      def user_parameters(params, &block)
         node = Gridinit::Jmeter::UserParameters.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'UserParameters'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="#{name}" enabled="true">
+<UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="#{params[:name]}" enabled="true">
   <collectionProp name="UserParameters.names"/>
   <collectionProp name="UserParameters.thread_values">
     <collectionProp name="1"/>
@@ -23,6 +24,7 @@ module Gridinit
 </UserParameters>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

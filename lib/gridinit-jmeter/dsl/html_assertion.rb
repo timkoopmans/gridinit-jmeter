@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def html_assertion(params={}, &block)
+      def html_assertion(params, &block)
         node = Gridinit::Jmeter::HtmlAssertion.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'HtmlAssertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<HTMLAssertion guiclass="HTMLAssertionGui" testclass="HTMLAssertion" testname="#{name}" enabled="true">
+<HTMLAssertion guiclass="HTMLAssertionGui" testclass="HTMLAssertion" testname="#{params[:name]}" enabled="true">
   <longProp name="html_assertion_error_threshold">0</longProp>
   <longProp name="html_assertion_warning_threshold">0</longProp>
   <stringProp name="html_assertion_doctype">omit</stringProp>
@@ -24,6 +25,7 @@ module Gridinit
 </HTMLAssertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jsr223_sampler(params={}, &block)
+      def jsr223_sampler(params, &block)
         node = Gridinit::Jmeter::Jsr223Sampler.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'Jsr223Sampler'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="#{name}" enabled="true">
+<JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="#{params[:name]}" enabled="true">
   <stringProp name="cacheKey"/>
   <stringProp name="filename"/>
   <stringProp name="parameters"/>
@@ -23,6 +24,7 @@ module Gridinit
 </JSR223Sampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

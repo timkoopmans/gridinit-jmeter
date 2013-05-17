@@ -1,7 +1,7 @@
 module Gridinit
   module Jmeter
 
-    class ThroughputShapingTimer
+    class GCThroughputShapingTimer
       attr_accessor :doc
       include Helper
       def initialize(name, steps, params={})

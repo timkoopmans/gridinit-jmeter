@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def runtime_controller(params={}, &block)
+      def runtime_controller(params, &block)
         node = Gridinit::Jmeter::RuntimeController.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,15 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'RuntimeController'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<RunTime guiclass="RunTimeGui" testclass="RunTime" testname="#{name}" enabled="true">
+<RunTime guiclass="RunTimeGui" testclass="RunTime" testname="#{params[:name]}" enabled="true">
   <stringProp name="RunTime.seconds">1</stringProp>
 </RunTime>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

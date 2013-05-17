@@ -43,7 +43,15 @@
       </ConfigTestElement>
       <hashTree/>
       <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
-        <collectionProp name="AuthManager.auth_list"/>
+        <collectionProp name="AuthManager.auth_list">
+          <elementProp name="" elementType="Authorization">
+            <stringProp name="Authorization.url"></stringProp>
+            <stringProp name="Authorization.username"></stringProp>
+            <stringProp name="Authorization.password"></stringProp>
+            <stringProp name="Authorization.domain"></stringProp>
+            <stringProp name="Authorization.realm"></stringProp>
+          </elementProp>
+        </collectionProp>
       </AuthManager>
       <hashTree/>
       <CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">
@@ -54,10 +62,16 @@
       <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
         <collectionProp name="CookieManager.cookies"/>
         <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <stringProp name="CookieManager.policy">default</stringProp>
       </CookieManager>
       <hashTree/>
       <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-        <collectionProp name="HeaderManager.headers"/>
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name"></stringProp>
+            <stringProp name="Header.value"></stringProp>
+          </elementProp>
+        </collectionProp>
       </HeaderManager>
       <hashTree/>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
@@ -70,7 +84,16 @@
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
         <stringProp name="HTTPSampler.protocol"></stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.path">/</stringProp>
+        <stringProp name="HTTPSampler.method">GET</stringProp>
+        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+        <boolProp name="HTTPSampler.monitor">false</boolProp>
+        <boolProp name="HTTPSampler.image_parser">false</boolProp>
+        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
         <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
       </ConfigTestElement>
       <hashTree/>
@@ -173,7 +196,14 @@
         <stringProp name="test">add</stringProp>
         <stringProp name="base_entry_dn"></stringProp>
         <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments"/>
+          <collectionProp name="Arguments.arguments">
+              <elementProp name="testguid" elementType="Argument">
+              <stringProp name="Argument.name"></stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+          <stringProp name="TestPlan.comments"></stringProp>
         </elementProp>
       </ConfigTestElement>
       <hashTree/>
@@ -231,6 +261,7 @@
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
           <stringProp name="IfController.condition"></stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">false</boolProp>
         </IfController>
         <hashTree/>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Controller" enabled="true">
@@ -266,7 +297,7 @@
         <hashTree/>
         <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Throughput Controller" enabled="true">
           <intProp name="ThroughputController.style">0</intProp>
-          <boolProp name="ThroughputController.perThread">true</boolProp>
+          <boolProp name="ThroughputController.perThread">false</boolProp>
           <intProp name="ThroughputController.maxThroughput">1</intProp>
           <FloatProperty>
             <name>ThroughputController.percentThroughput</name>
@@ -276,7 +307,8 @@
         </ThroughputController>
         <hashTree/>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Transaction Controller" enabled="true">
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
+          <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree/>
         <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="true">
@@ -802,6 +834,7 @@
           <stringProp name="RegexExtractor.template"></stringProp>
           <stringProp name="RegexExtractor.default"></stringProp>
           <stringProp name="RegexExtractor.match_number"></stringProp>
+          <stringProp name="Sample.scope">all</stringProp>
         </RegexExtractor>
         <hashTree/>
         <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="Result Status Action Handler" enabled="true">
@@ -875,10 +908,13 @@
         </MD5HexAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-          <collectionProp name="Asserion.test_strings"/>
-          <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <boolProp name="Assertion.assume_success">false</boolProp>
-          <intProp name="Assertion.test_type">2</intProp>
+          <collectionProp name="Asserion.test_strings">
+              <stringProp name="match"></stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+            <stringProp name="Assertion.scope"></stringProp>
         </ResponseAssertion>
         <hashTree/>
         <SMIMEAssertion guiclass="SMIMEAssertionGui" testclass="SMIMEAssertion" testname="SMIME Assertion" enabled="true">

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def throughput_controller(params={}, &block)
+      def throughput_controller(params, &block)
         node = Gridinit::Jmeter::ThroughputController.new(params)
         attach_node(node, &block)
       end
@@ -12,11 +12,12 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'ThroughputController'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="#{name}" enabled="true">
+<ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="#{params[:name]}" enabled="true">
   <intProp name="ThroughputController.style">0</intProp>
-  <boolProp name="ThroughputController.perThread">true</boolProp>
+  <boolProp name="ThroughputController.perThread">false</boolProp>
   <intProp name="ThroughputController.maxThroughput">1</intProp>
   <FloatProperty>
     <name>ThroughputController.percentThroughput</name>
@@ -26,6 +27,7 @@ module Gridinit
 </ThroughputController>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

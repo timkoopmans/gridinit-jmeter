@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def response_assertion(params={}, &block)
+      def response_assertion(params, &block)
         node = Gridinit::Jmeter::ResponseAssertion.new(params)
         attach_node(node, &block)
       end
@@ -12,16 +12,21 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'ResponseAssertion'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="#{name}" enabled="true">
-  <collectionProp name="Asserion.test_strings"/>
+<ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="#{params[:name]}" enabled="true">
+  <collectionProp name="Asserion.test_strings">
+    <stringProp name="match"/>
+  </collectionProp>
   <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
   <boolProp name="Assertion.assume_success">false</boolProp>
   <intProp name="Assertion.test_type">2</intProp>
+  <stringProp name="Assertion.scope"/>
 </ResponseAssertion>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

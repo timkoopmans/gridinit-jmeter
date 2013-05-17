@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def http_request(params={}, &block)
+      def http_request(params, &block)
         node = Gridinit::Jmeter::HttpRequest.new(params)
         attach_node(node, &block)
       end
@@ -12,10 +12,11 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'HttpRequest'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="#{name}" enabled="true">
-  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="#{name}" enabled="true">
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="#{params[:name]}" enabled="true">
+  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="#{params[:name]}" enabled="true">
     <collectionProp name="Arguments.arguments"/>
   </elementProp>
   <stringProp name="HTTPSampler.domain"/>
@@ -35,6 +36,7 @@ module Gridinit
 </HTTPSamplerProxy>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def xpath_extractor(params={}, &block)
+      def xpath_extractor(params, &block)
         node = Gridinit::Jmeter::XpathExtractor.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'XpathExtractor'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="#{name}" enabled="true">
+<XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="#{params[:name]}" enabled="true">
   <stringProp name="XPathExtractor.default"/>
   <stringProp name="XPathExtractor.refname"/>
   <stringProp name="XPathExtractor.xpathQuery"/>
@@ -24,6 +25,7 @@ module Gridinit
 </XPathExtractor>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

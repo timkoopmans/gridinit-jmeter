@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def login_config_element(params={}, &block)
+      def login_config_element(params, &block)
         node = Gridinit::Jmeter::LoginConfigElement.new(params)
         attach_node(node, &block)
       end
@@ -12,14 +12,16 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'LoginConfigElement'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ConfigTestElement guiclass="LoginConfigGui" testclass="ConfigTestElement" testname="#{name}" enabled="true">
+<ConfigTestElement guiclass="LoginConfigGui" testclass="ConfigTestElement" testname="#{params[:name]}" enabled="true">
   <stringProp name="ConfigTestElement.username"/>
   <stringProp name="ConfigTestElement.password"/>
 </ConfigTestElement>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

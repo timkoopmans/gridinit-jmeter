@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def constant_timer(params={}, &block)
+      def constant_timer(params, &block)
         node = Gridinit::Jmeter::ConstantTimer.new(params)
         attach_node(node, &block)
       end
@@ -12,13 +12,15 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'ConstantTimer'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="#{name}" enabled="true">
+<ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="#{params[:name]}" enabled="true">
   <stringProp name="ConstantTimer.delay">300</stringProp>
 </ConstantTimer>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def jdbc_connection_configuration(params={}, &block)
+      def jdbc_connection_configuration(params, &block)
         node = Gridinit::Jmeter::JdbcConnectionConfiguration.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'JdbcConnectionConfiguration'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="#{name}" enabled="true">
+<JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="#{params[:name]}" enabled="true">
   <boolProp name="autocommit">true</boolProp>
   <stringProp name="checkQuery">Select 1</stringProp>
   <stringProp name="connectionAge">5000</stringProp>
@@ -31,6 +32,7 @@ module Gridinit
 </JDBCDataSource>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

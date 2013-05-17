@@ -33,15 +33,18 @@ doc.traverse do |node|
     node.name != 'elementProp'
 end
 
+methods = []
+methods << "# Gridinit::JMeter::DSL methods"
 results.each do |element|
   klass = element.attributes['testname'].to_s.classify
+  methods << "- #{element.attributes['testname'].to_s}\n  `#{klass.underscore}`"
   Dir.mkdir(dsl, 0700) unless Dir.exist? dsl
   File.open("#{dsl}/#{klass.underscore}.rb", 'w') { |file| file.write(<<EOC)
 module Gridinit
   module Jmeter
 
     class DSL
-      def #{klass.underscore}(params={}, &block)
+      def #{klass.underscore}(params, &block)
         node = Gridinit::Jmeter::#{klass}.new(params)
         attach_node(node, &block)
       end
@@ -51,11 +54,13 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= '#{klass}'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-#{element.to_xml.gsub /testname=".+?"/, 'testname="#{name}"'})
+#{element.to_xml.gsub /testname=".+?"/, 'testname="#{params[:name]}"'})
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 
@@ -64,3 +69,5 @@ end
 EOC
 }
 end
+
+File.open("#{home}/DSL.md", 'w') { |file| file.write methods.join("\n") }

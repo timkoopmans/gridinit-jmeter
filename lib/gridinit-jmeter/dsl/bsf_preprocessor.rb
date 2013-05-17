@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def bsf_preprocessor(params={}, &block)
+      def bsf_preprocessor(params, &block)
         node = Gridinit::Jmeter::BsfPreprocessor.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'BsfPreprocessor'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="#{name}" enabled="true">
+<BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="#{params[:name]}" enabled="true">
   <stringProp name="filename"/>
   <stringProp name="parameters"/>
   <stringProp name="script"/>
@@ -22,6 +23,7 @@ module Gridinit
 </BSFPreProcessor>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def html_link_parser(params={}, &block)
+      def html_link_parser(params, &block)
         node = Gridinit::Jmeter::HtmlLinkParser.new(params)
         attach_node(node, &block)
       end
@@ -12,11 +12,13 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'HtmlLinkParser'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<AnchorModifier guiclass="AnchorModifierGui" testclass="AnchorModifier" testname="#{name}" enabled="true"/>)
+<AnchorModifier guiclass="AnchorModifierGui" testclass="AnchorModifier" testname="#{params[:name]}" enabled="true"/>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

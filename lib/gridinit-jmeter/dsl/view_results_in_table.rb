@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def view_results_in_table(params={}, &block)
+      def view_results_in_table(params, &block)
         node = Gridinit::Jmeter::ViewResultsInTable.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'ViewResultsInTable'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="#{name}" enabled="true">
+<ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="#{params[:name]}" enabled="true">
   <boolProp name="ResultCollector.error_logging">false</boolProp>
   <objProp>
     <name>saveConfig</name>
@@ -49,6 +50,7 @@ module Gridinit
 </ResultCollector>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

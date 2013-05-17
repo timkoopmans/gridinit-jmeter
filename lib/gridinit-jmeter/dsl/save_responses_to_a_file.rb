@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def save_responses_to_a_file(params={}, &block)
+      def save_responses_to_a_file(params, &block)
         node = Gridinit::Jmeter::SaveResponsesToAFile.new(params)
         attach_node(node, &block)
       end
@@ -12,9 +12,10 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'SaveResponsesToAFile'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="#{name}" enabled="true">
+<ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="#{params[:name]}" enabled="true">
   <stringProp name="FileSaver.filename"/>
   <boolProp name="FileSaver.errorsonly">false</boolProp>
   <boolProp name="FileSaver.skipautonumber">false</boolProp>
@@ -23,6 +24,7 @@ module Gridinit
 </ResultSaver>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 

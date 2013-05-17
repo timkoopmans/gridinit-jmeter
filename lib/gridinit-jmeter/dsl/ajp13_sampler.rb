@@ -2,7 +2,7 @@ module Gridinit
   module Jmeter
 
     class DSL
-      def ajp13_sampler(params={}, &block)
+      def ajp13_sampler(params, &block)
         node = Gridinit::Jmeter::Ajp13Sampler.new(params)
         attach_node(node, &block)
       end
@@ -12,10 +12,11 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= 'Ajp13Sampler'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-<AjpSampler guiclass="AjpSamplerGui" testclass="AjpSampler" testname="#{name}" enabled="true">
-  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="#{name}" enabled="true">
+<AjpSampler guiclass="AjpSamplerGui" testclass="AjpSampler" testname="#{params[:name]}" enabled="true">
+  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="#{params[:name]}" enabled="true">
     <collectionProp name="Arguments.arguments"/>
   </elementProp>
   <stringProp name="HTTPSampler.domain"/>
@@ -35,6 +36,7 @@ module Gridinit
 </AjpSampler>)
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 
