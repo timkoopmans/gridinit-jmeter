@@ -376,48 +376,48 @@ describe "DSL" do
 
   # end
 
-  # describe 'Nested controllers' do
+  describe 'Nested controllers' do
 
-  #   let(:doc) do
-  #     test do
-  #       simple 'blah1.1' do
-  #         simple 'blah2.1'
-  #         simple 'blah2.2' do
-  #           simple 'blah3.1'
-  #         end
-  #         simple 'blah2.3'
-  #       end
-  #       simple 'blah1.2'
-  #     end.to_doc
-  #   end
+    let(:doc) do
+      test do
+        Simple name: 'blah1.1' do
+          Simple name: 'blah2.1'
+          Simple name: 'blah2.2' do
+            Simple name: 'blah3.1'
+          end
+          Simple name: 'blah2.3'
+        end
+        Simple name: 'blah1.2'
+      end.to_doc
+    end
 
-  #   let(:blah1_1) { doc.search("//GenericController[@testname='blah1.1']").first }
-  #   let(:blah1_2) { doc.search("//GenericController[@testname='blah1.2']").first }
+    let(:blah1_1) { doc.search("//GenericController[@testname='blah1.1']").first }
+    let(:blah1_2) { doc.search("//GenericController[@testname='blah1.2']").first }
 
-  #   let(:blah2_1) { doc.search("//GenericController[@testname='blah2.1']").first }
-  #   let(:blah2_2) { doc.search("//GenericController[@testname='blah2.2']").first }
-  #   let(:blah2_3) { doc.search("//GenericController[@testname='blah2.3']").first }
+    let(:blah2_1) { doc.search("//GenericController[@testname='blah2.1']").first }
+    let(:blah2_2) { doc.search("//GenericController[@testname='blah2.2']").first }
+    let(:blah2_3) { doc.search("//GenericController[@testname='blah2.3']").first }
 
-  #   let(:blah3_1) { doc.search("//GenericController[@testname='blah3.1']").first }
+    let(:blah3_1) { doc.search("//GenericController[@testname='blah3.1']").first }
 
-  #   it 'nodes should have hashTree as its parent' do
-  #     [blah1_1, blah1_2, blah2_1, blah2_2, blah2_3, blah3_1].each do |node|
-  #       node.parent.name.should == 'hashTree'
-  #     end
-  #   end
+    it 'nodes should have hashTree as its parent' do
+      [blah1_1, blah1_2, blah2_1, blah2_2, blah2_3, blah3_1].each do |node|
+        node.parent.name.should == 'hashTree'
+      end
+    end
 
-  #   describe 'blah3_1' do
-  #     it 'parent parent should be blah2_2' do
-  #       blah3_1.parent.should == blah2_2.next
-  #     end
-  #   end
+    describe 'blah3_1' do
+      it 'parent parent should be blah2_2' do
+        blah3_1.parent.should == blah2_2.next
+      end
+    end
 
-  #   describe 'blah1_2' do
-  #     it 'previous non hashTree sibling is blah1_1' do
-  #       blah1_2.previous.previous.should == blah1_1
-  #     end
-  #   end
+    describe 'blah1_2' do
+      it 'previous non hashTree sibling is blah1_1' do
+        blah1_2.previous.previous.should == blah1_1
+      end
+    end
 
-  # end
+  end
 
 end
