@@ -3,14 +3,13 @@ require 'gridinit-jmeter'
 
 test do
 
-  threads 1 do
+  threads count: 1 do
 
-    transaction 'Post with a Raw Body', {:parent => true} do
-      post 'Home Page', 'http://google.com', {
-        :raw_body => '{"name":"Big Poncho","price":10,"vendor_attendance_id":24,"product_id":1}'
-      }
+    transaction name: 'Post with a Raw Body', parent: false do
+      post name: 'Home Page', url: 'http://google.com', 
+        raw_body: '{"name":"Big Poncho","price":10,"vendor_attendance_id":24,"product_id":1}'
     end
 
   end
 
-end.jmx
+end.run(path: '/usr/share/jmeter/bin/', gui: true)

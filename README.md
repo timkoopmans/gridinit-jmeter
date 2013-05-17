@@ -28,8 +28,8 @@ Let's create a `test` and save the related `jmx` testplan to file, so we can edi
 
 ```ruby
 test do
-  threads 10 do
-    visit 'Google Search', 'http://google.com'
+  threads count: 10 do
+    visit name: 'Google Search', url: 'http://google.com'
   end
 end.jmx
 ```
@@ -60,8 +60,8 @@ The file that is created can then be executed in the JMeter GUI. If you want to 
 
 ```ruby
 test do
-  threads 10 do
-    visit 'Google Search', 'http://google.com'
+  threads count: 10 do
+    visit name: 'Google Search', url: 'http://google.com'
   end
 end.jmx(file: "/tmp/my_testplan.jmx")
 ```
@@ -77,8 +77,8 @@ You can execute the JMeter test plan by calling the `run` method of the test lik
 
 ```ruby
 test do
-  threads 10 do
-    visit 'Google Search', 'http://google.com'
+  threads count: 10 do
+    visit name: 'Google Search', url: 'http://google.com'
   end
 end.run
 ```
@@ -87,8 +87,8 @@ This will launch JMeter in headless (non-GUI mode) and execute the test plan. Th
 
 ```ruby
 test do
-  threads 10 do
-    visit 'Google Search', 'http://google.com'
+  threads count: 10 do
+    visit name: 'Google Search', url: 'http://google.com'
   end
 end.run(
   path: '/usr/share/jmeter/bin/', 
@@ -105,8 +105,8 @@ To execute the test on the Grid, call the `grid` method on the test and pass it 
 
 ```ruby
 test do  
-  threads 10 do
-    visit 'Google Search', 'http://google.com'  
+  threads count: 10 do
+    visit name: 'Google Search', url: 'http://google.com'
   end  
 end.grid('OxtZ-4v-v0koSz5Y0enEQQ')
 ```
@@ -127,9 +127,9 @@ Blocks let you nest methods within methods, so you can scope the execution of me
 
 ```ruby
 test do
-  threads 100 do
-    visit 'Home', 'http://altentee.com' do
-      extract 'csrf-token', "content='(.+?)' name='csrf-token'"
+  threads count: 100 do
+    visit name: 'Home', url: 'http://altentee.com' do
+      extract regex: "content='(.+?)' name='csrf-token'", name: 'csrf-token'
     end
   end
 end
@@ -139,26 +139,20 @@ This would create a new test plan, with a 100 user thread group, each user visit
 
 All methods are nestable, but you should only have one test method, and typically only one threads method. For example, it wouldn't make sense to have a test plan within a test plan, or a thread group within a thread group. You can have multiple thread groups per test plan though. This implies *some* knowlege of how JMeter works.
 
+All methods take a parameter hash to configure related options.
+
 ### Threads
 
 You can use the `threads` method to define a group of users:
 
 ```ruby
-threads 100
-```
-
-This methods takes 2 parameters: the number of threads and an optional parameters hash.
-
-```ruby
-threads 100
-threads 100, {continue_forever: 'true'}
-threads 100, {loops: 10}
-threads 100, {ramp_time: 30, duration: 60}
-threads 100, {
-  scheduler: 'true', 
+threads count: 100
+threads count: 100, continue_forever: true
+threads count: 100, loops: 10
+threads count: 100, ramup: 30, duration: 60
+threads count: 100, scheduler: true, 
   start_time: Time.now.to_i * 1000,
   end_time:   (Time.now.to_i * 1000) + (3600 * 1000)
-}
 ```
 
 ### Cookies
@@ -228,28 +222,19 @@ end
 You can use the `visit` method to navigate to pages:
 
 ```ruby
-  visit 'Google Search', 'http://google.com'
-```
-
-This method makes a single request and takes 3 parameters: the label, the URL and an optional parameters hash.
-
-```ruby
-visit 'Google Search', 'http://google.com'
-visit 'Google Search', 'http://google.com', {
+visit name: 'Google Search', url: 'http://google.com'
+visit name: 'Google Search', url: 'http://google.com'
+visit name: 'Google Search', url: 'http://google.com', 
   method: 'POST', 
-  DO_MULTIPART_POST: 'true'
-}
-visit 'Google Search', 'http://google.com', {
+  'DO_MULTIPART_POST': 'true'
+visit name: 'Google Search', url: 'http://google.com',
   use_keepalive: 'false'
-}
-visit 'Google Search', 'http://google.com', {
+visit name: 'Google Search', url: 'http://google.com', 
   connect_timeout: '1000',
-  response_timeout: '60000',
-}
-visit 'View Login', '/login', {
+  response_timeout: '60000'
+visit name: 'View Login', url: '/login', 
   protocol: "https",
   port: 443
-}
 ```
 
 ### Submitting a Form
@@ -257,7 +242,7 @@ visit 'View Login', '/login', {
 You can use the `submit` method to POST a HTTP form:
 
 ```ruby
-submit 'Submit Form', 'http://altentee.com/', {
+submit name: 'Submit Form', url: 'http://altentee.com/',
   fill_in: {
     username: 'tim',
     password: 'password',
@@ -265,7 +250,7 @@ submit 'Submit Form', 'http://altentee.com/', {
   }
 ```
 
-This method makes a single request and takes 3 parameters: the label, the URL and an optional parameters hash. The fill_in parameter lets you specify key/value pairs for form field parameters. You can also use the built in JMeter `${expression}` language to access run time variables extracted from previous responses.
+This method makes a single request. The fill_in parameter lets you specify key/value pairs for form field parameters. You can also use the built in JMeter `${expression}` language to access run time variables extracted from previous responses.
 
 ### Think Time
 
@@ -289,33 +274,26 @@ random_timer 1000,5000
 You can use the `extract` method to extract values from a server response using a regular expression. This is aliased as the `web_reg_save_param` method. This method is typically used inside a `visit` or `submit` block.
 
 ```ruby
-extract 'csrf-token', "content='(.+?)' name='csrf-token'"
-```
+extract regex: "content='(.+?)' name='csrf-token'", name: 'csrf-token'
 
-This method takes 4 parameters: the selector (xpath or regex), the extracted value name, the PCRE regular expression and an optional parameters hash. The selector is optional and defaults to regex. You can specify regex or xpath extractors as follows.
-
-```
-visit 'Google', "http://google.com/" do
-  extract 'button_text', 'aria-label="(.+?)"'
-  extract :regex, 'button_text', 'aria-label="(.+?)"'
-  extract :xpath, 'button', '//button'
+visit name: 'Google', url: "http://google.com/" do
+  extract regex: 'aria-label="(.+?)"', name: 'button_text'
+  extract xpath: '//button', name: 'button'
 end
 ```
 
 This is based on the [Regular Expression Extractor](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor) and [XPath Extractor](http://jmeter.apache.org/usermanual/component_reference.html#XPath_Extractor)
 
 ```ruby
-visit "Altentee", "http://altentee.com" do
-  extract 'csrf-token', "content='(.+?)' name='csrf-token'"
-  extract 'JSESSIONID', 'value="(.+?)" name="JESSIONSID"'
-  web_reg_save_param 'VIEWSTATE', 'value="(.+?)" name="VIEWSTATE"'
-  extract 'username', 'value="(.+?)" name="username"', {
+visit name: "Altentee", url: "http://altentee.com" do
+  extract regex: "content='(.+?)' name='csrf-token'", name: 'csrf-token'
+  extract regex: 'value="(.+?)" name="JESSIONSID"', name: 'JSESSIONID'
+  web_reg_save_param regex: 'value="(.+?)" name="VIEWSTATE"', name: 'VIEWSTATE'
+  extract name: 'username', regex: 'value="(.+?)", name="username"', 
     default: 'Tim Koopmans',
     match_number: 1
-  }
-  extract 'shopping_item', 'id="(.+?)" name="book"', {
+  extract name: 'shopping_item', regex: 'id="(.+?)" name="book"', 
     match_number: 0 # random
-  }
 end
 ```
 
@@ -325,7 +303,7 @@ You can use the `assert` method to extract values from a server response using a
 
 ```ruby
 visit "Altentee", "http://altentee.com" do
-  assert "contains", "We test, tune and secure your site"
+  assert contains: "We test, tune and secure your site"
 end
 ```
 
@@ -334,12 +312,12 @@ This method takes 3 parameters: the matching rule, the test string, and an optio
 
 ```ruby
 visit "Altentee", "http://altentee.com" do
-  assert "contains", "We test, tune and secure your site"
-  assert "not-contains", "We price gouge on cloud services"
-  assert "matches", "genius"
-  assert "not-matches", "fakers"
-  assert "contains", "magic"
-  assert "not-contains", "unicorns", {scope: 'all'}
+  assert "contains": "We test, tune and secure your site"
+  assert "not-contains": "We price gouge on cloud services"
+  assert "matches": "genius"
+  assert "not-matches": "fakers"
+  assert "contains": "magic"
+  assert "not-contains": "unicorns", scope: 'all'
 end
 ```
 
@@ -351,6 +329,7 @@ This is very much a work-in-progress. Future work is being sponsored by Gridinit
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+3. Create some specs, make them pass
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request

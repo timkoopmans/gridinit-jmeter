@@ -1,8 +1,12 @@
 #!/usr/bin/env ruby
+# This is an IDL script to translate a JMeter testplan into Ruby DSL objects
 require 'nokogiri'
-# require 'pry-debugger'
+require 'pathname'
 
-file = File.open 'idl.xml'
+home = Pathname("..").expand_path(__FILE__)
+dsl  = File.join(home, "/dsl")
+
+file = File.open File.join(home, "idl.xml")
 doc = Nokogiri::XML file.read.gsub! /\n\s+/, ''
 nodes = doc.xpath '//jmeterTestPlan/hashTree'
 
@@ -29,10 +33,13 @@ doc.traverse do |node|
     node.name != 'elementProp'
 end
 
+methods = []
+methods << "# Gridinit::JMeter::DSL methods"
 results.each do |element|
   klass = element.attributes['testname'].to_s.classify
-
-  File.open("idl/#{klass.underscore}.rb", 'w') { |file| file.write(<<EOC)
+  methods << "- #{element.attributes['testname'].to_s}\n  `#{klass.underscore}`"
+  Dir.mkdir(dsl, 0700) unless Dir.exist? dsl
+  File.open("#{dsl}/#{klass.underscore}.rb", 'w') { |file| file.write(<<EOC)
 module Gridinit
   module Jmeter
 
@@ -47,11 +54,13 @@ module Gridinit
       attr_accessor :doc
       include Helper
 
-      def initialize(name, params={})
+      def initialize(params={})
+        params[:name] ||= '#{klass}'
         @doc = Nokogiri::XML(<<-EOS.strip_heredoc)
-#{element.to_xml.gsub /testname=".+?"/, 'testname="#{name}"'})
+#{element.to_xml.gsub /testname=".+?"/, 'testname="#{params[:name]}"'})
         EOS
         update params
+        update_at_xpath params if params[:update_at_xpath]
       end
     end
 
@@ -61,3 +70,4 @@ EOC
 }
 end
 
+File.open("#{home}/DSL.md", 'w') { |file| file.write methods.join("\n") }
