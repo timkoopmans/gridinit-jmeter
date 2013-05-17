@@ -178,8 +178,8 @@ module Gridinit
       def extract(params, &block)
         node = if params[:regex]
           params[:refname] = params[:name]
-          params[:regex] = CGI.escapeHTML = params[:regex]
-          params[:template] = args.last[:template] || "$1$"
+          params[:regex] = CGI.escapeHTML params[:regex]
+          params[:template] = params[:template] || "$1$"
           Gridinit::Jmeter::RegularExpressionExtractor.new(params)
         else
           params[:refname] = params[:name]
