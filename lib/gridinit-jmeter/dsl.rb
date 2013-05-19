@@ -54,7 +54,9 @@ module Gridinit
 
       alias_method :auth, :http_authorization_manager
 
-      def thread_group(params={}, &block)
+      def thread_group(*args, &block)
+        params = args.shift || {}
+        params = { count: params }.merge(args.shift || {}) if params.class == Fixnum
         params[:num_threads]        = params[:count] || 1
         params[:ramp_time]          = params[:rampup] || (params[:num_threads]/2.0).ceil
         params[:start_time]         = params[:start_time] || Time.now.to_i * 1000
@@ -62,17 +64,20 @@ module Gridinit
         params[:duration]         ||= 60
         params[:continue_forever] ||= false
         params[:loops]              = -1 if params[:continue_forever]
-        super
+        node = Gridinit::Jmeter::ThreadGroup.new(params)
+        attach_node(node, &block)
       end
 
       alias_method :threads, :thread_group
 
-
       ##
       # HTTP Samplers
 
-      def get(params, &block)
+      def get(*args, &block)
+        params = args.shift || {}
+        params = { url: params }.merge(args.shift || {}) if params.class == String
         params[:method] ||= 'GET'
+        params[:name] ||= params[:url]
         parse_http_request(params)
         node = Gridinit::Jmeter::HttpRequest.new(params)
         attach_node(node, &block)
@@ -80,8 +85,11 @@ module Gridinit
 
       alias_method :visit, :get
 
-      def post(params, &block)
+      def post(*args, &block)
+        params = args.shift || {}
+        params = { url: params }.merge(args.shift || {}) if params.class == String
         params[:method] ||= 'POST'
+        params[:name] ||= params[:url]
         parse_http_request(params)
         node = Gridinit::Jmeter::HttpRequest.new(params)
         attach_node(node, &block)
@@ -89,15 +97,21 @@ module Gridinit
 
       alias_method :submit, :post
 
-      def delete(params, &block)
+      def delete(*args, &block)
+        params = args.shift || {}
+        params = { url: params }.merge(args.shift || {}) if params.class == String
         params[:method] ||= 'DELETE'
+        params[:name] ||= params[:url]
         parse_http_request(params)
         node = Gridinit::Jmeter::HttpRequest.new(params)
         attach_node(node, &block)
       end
 
-      def put(params, &block)
+      def put(*args, &block)
+        params = args.shift || {}
+        params = { url: params }.merge(args.shift || {}) if params.class == String
         params[:method] ||= 'PUT'
+        params[:name] ||= params[:url]
         parse_http_request(params)
         node = Gridinit::Jmeter::HttpRequest.new(params)
         attach_node(node, &block)
@@ -128,11 +142,13 @@ module Gridinit
       ##
       # Controllers
 
-      def transaction_controller(params={}, &block)
-        params = {name: params} if params.class == String
+      def transaction_controller(*args, &block)
+        params = args.shift || {}
+        params = { name: params }.merge(args.shift || {}) if params.class == String
         params[:parent] ||= true
         params[:includeTimers] = params[:include_timers] || false
-        super
+        node = Gridinit::Jmeter::TransactionController.new(params)
+        attach_node(node, &block)
       end
 
       alias_method :transaction, :transaction_controller
@@ -189,7 +205,7 @@ module Gridinit
       def extract(params, &block)
         node = if params[:regex]
           params[:refname] = params[:name]
-          params[:regex] = CGI.escapeHTML params[:regex]
+          params[:regex] = params[:regex] #CGI.escapeHTML 
           params[:template] = params[:template] || "$1$"
           Gridinit::Jmeter::RegularExpressionExtractor.new(params)
         else

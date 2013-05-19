@@ -77,6 +77,33 @@ describe "DSL" do
   end
 
 
+  describe 'thread groups old syntax' do
+    let(:doc) do
+      test do
+        threads 101, continue_forever: true, duration: 69
+      end.to_doc
+    end
+
+    let(:fragment) { doc.search("//ThreadGroup").first }
+
+    it 'should match on num_threads' do
+      fragment.search(".//stringProp[@name='ThreadGroup.num_threads']").text.should == '101'
+    end
+
+    it 'should match on continue_forever' do
+      fragment.search(".//boolProp[@name='LoopController.continue_forever']").text.should == 'true'
+    end
+
+    it 'should match on loops' do
+      fragment.search(".//stringProp[@name='LoopController.loops']").text.should == '-1'
+    end
+
+    it 'should match on duration' do
+      fragment.search(".//stringProp[@name='ThreadGroup.duration']").text.should == '69'
+    end
+  end
+
+
   describe 'transaction controller' do
     let(:doc) do
       test do
@@ -117,6 +144,23 @@ describe "DSL" do
 
     it 'should match on always_encode' do
       fragment.search(".//boolProp[@name='HTTPArgument.always_encode']").text.should == 'true'
+    end
+  end
+
+
+  describe 'visit old syntax' do
+    let(:doc) do
+      test do
+        threads do
+          visit "/home?location=melbourne", always_encode: true
+        end
+      end.to_doc
+    end
+
+    let(:fragment) { doc.search("//HTTPSamplerProxy").first }
+
+    it 'should match on path' do
+      fragment.search(".//stringProp[@name='HTTPSampler.path']").text.should == '/home'
     end
   end
 

@@ -21,7 +21,7 @@ module Gridinit
       end
 
       def parse_url(params)
-        if params[:url][0] == '$'
+        if params[:url] =~ /https?:\/\/\$/ || params[:url][0] == '$'
           params[:path] = params[:url] # special case for named expressions
         else 
           uri = parse_uri(params[:url])
