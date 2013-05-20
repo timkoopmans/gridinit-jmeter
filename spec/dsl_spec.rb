@@ -347,7 +347,6 @@ describe "DSL" do
     let(:fragment) { doc.search("//RegexExtractor").first }
 
     it 'should match on refname' do
-      # puts doc.to_xml indent: 2
       fragment.search(".//stringProp[@name='RegexExtractor.refname']").text.should == 'my_regex'
     end
   end
@@ -363,8 +362,52 @@ describe "DSL" do
     let(:fragment) { doc.search("//XPathExtractor").first }
 
     it 'should match on refname' do
-      # puts doc.to_xml indent: 2
       fragment.search(".//stringProp[@name='XPathExtractor.refname']").text.should == 'my_xpath'
+    end
+  end
+
+
+  describe 'assertions' do
+
+    describe 'scope all' do
+      let(:doc) do
+        test do
+          visit '/' do
+            assert contains: 'Welcome'
+          end
+        end.to_doc
+      end
+
+      let(:fragment) { doc.search("//ResponseAssertion").first }
+
+      it 'should match on match' do
+        fragment.search(".//stringProp[@name='match']").text.should == 'Welcome'
+      end
+
+      it 'should match on scope' do
+        fragment.search(".//stringProp[@name='Assertion.scope']").text.should == 'all'
+      end
+
+      it 'should match on test_type' do
+        fragment.search(".//intProp[@name='Assertion.test_type']").text.should == '2'
+      end
+    end
+
+    describe 'scope main' do
+      let(:doc) do
+        test do
+          visit '/' do
+            assert contains: 'Welcome', scope: 'main'
+          end
+        end.to_doc
+      end
+
+      let(:fragment) { doc.search("//ResponseAssertion").first }
+
+      it 'should match on scope' do
+        puts doc.to_xml indent: 2
+        fragment.search(".//stringProp[@name='Assertion.scope']").text.should == ""
+      end
     end
   end
 

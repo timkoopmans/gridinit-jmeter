@@ -232,6 +232,8 @@ module Gridinit
         params[:test_type] = parse_test_type(params)
         params[:match] = params.values.first
         node = Gridinit::Jmeter::ResponseAssertion.new(params)
+        node.doc.xpath("//stringProp[@name='Assertion.scope']").remove if
+          params[:scope] == 'main' || params['scope'] == 'main'
         attach_node(node, &block)
       end
 
