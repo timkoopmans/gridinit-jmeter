@@ -129,7 +129,7 @@ describe "DSL" do
     let(:doc) do
       test do
         threads do
-          throughput_controller percent: 100 do
+          throughput_controller percent: 99 do
             transaction name: "TC_01", parent: true, include_timers: true
           end
         end
@@ -140,7 +140,8 @@ describe "DSL" do
 
     it 'should match on maxThroughput' do
       # puts doc.to_xml indent: 2
-      fragment.search(".//intProp[@name='ThroughputController.maxThroughput']").text.should == '100'
+      fragment.search(".//intProp[@name='ThroughputController.maxThroughput']").text.should == '99'
+      fragment.search(".//FloatProperty/value").text.should == '99.0'
     end
 
     it 'should match on style' do

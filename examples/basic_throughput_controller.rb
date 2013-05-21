@@ -6,7 +6,7 @@ test do
 
     think_time 5000,5000
 
-    throughput_controller percent: 100 do
+    throughput_controller percent: 99 do
       transaction name: "TC_01", parent: true, include_timers: true
     end
         

@@ -182,7 +182,11 @@ module Gridinit
       def throughput_controller(params, &block)
         params[:style] = 1 if params[:percent]
         params[:maxThroughput] = params[:total] || params[:percent] || 1
-        super
+
+        node = Gridinit::Jmeter::ThroughputController.new(params)
+        node.doc.xpath(".//FloatProperty/value").first.content = params[:maxThroughput].to_f
+       
+        attach_node(node, &block)
       end
 
       alias_method :Throughput, :throughput_controller
