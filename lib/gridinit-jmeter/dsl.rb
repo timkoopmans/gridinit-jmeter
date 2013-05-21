@@ -179,6 +179,12 @@ module Gridinit
 
       alias_method :Loop, :loop_controller
 
+      def throughput_controller(params, &block)
+        params[:style] = 1 if params[:percent]
+        params[:maxThroughput] = params[:total] || params[:percent] || 1
+        super
+      end
+
       alias_method :Throughput, :throughput_controller
 
       alias_method :Switch, :switch_controller
@@ -204,11 +210,6 @@ module Gridinit
 
       ##
       # Other Elements
-
-      def beanshell_preprocessor(params, &block)
-        params[:script] = "<![CDATA[#{params[:script]}]]>"
-        super
-      end
 
       alias_method :bsh_pre, :beanshell_preprocessor
 

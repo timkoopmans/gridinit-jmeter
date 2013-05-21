@@ -125,6 +125,30 @@ describe "DSL" do
   end
 
 
+  describe 'throughput controller' do
+    let(:doc) do
+      test do
+        threads do
+          throughput_controller percent: 100 do
+            transaction name: "TC_01", parent: true, include_timers: true
+          end
+        end
+      end.to_doc
+    end
+
+    let(:fragment) { doc.search("//ThroughputController").first }
+
+    it 'should match on maxThroughput' do
+      # puts doc.to_xml indent: 2
+      fragment.search(".//intProp[@name='ThroughputController.maxThroughput']").text.should == '100'
+    end
+
+    it 'should match on style' do
+      fragment.search(".//intProp[@name='ThroughputController.style']").text.should == '1'
+    end
+  end
+
+
   describe 'visit' do
     let(:doc) do
       test do
@@ -405,7 +429,6 @@ describe "DSL" do
       let(:fragment) { doc.search("//ResponseAssertion").first }
 
       it 'should match on scope' do
-        puts doc.to_xml indent: 2
         fragment.search(".//stringProp[@name='Assertion.scope']").text.should == ""
       end
     end
