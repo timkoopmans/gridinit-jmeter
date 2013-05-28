@@ -10,7 +10,14 @@ This gem lets you write test plans for JMeter in your favourite text editor, and
 
 Install it yourself as:
 
-    $ gem install gridinit-jmeter
+    % git clone https://github.com/altentee/gridinit-jmeter.git
+    % cd gridinit-jmeter
+    % gem build gridinit-jmeter.gemspec
+    % gem install gridinit-jmeter-1.0.2.pre.gem
+
+Or add the gem to your Gemfile and run the bundle command to install it.
+
+    gem "gridinit-jmeter", github: "altentee/gridinit-jmeter"
 
 ## Basic Usage
 
