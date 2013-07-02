@@ -303,6 +303,12 @@ module Gridinit
 
       alias_method :shaper, :throughput_shaper
 
+      def dummy_sampler(name="jp@gc - Dummy Sampler", params={}, &block)
+        node = Gridinit::Jmeter::GCDummySampler.new(name, params)
+        attach_node(node, &block)
+      end
+
+      alias_method :dummy, :dummy_sampler
 
       # API Methods
 

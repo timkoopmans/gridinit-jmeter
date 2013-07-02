@@ -21,7 +21,8 @@ module Gridinit
   <stringProp name="CounterConfig.incr"/>
   <stringProp name="CounterConfig.name"/>
   <stringProp name="CounterConfig.format"/>
-  <boolProp name="CounterConfig.per_user">false</boolProp>
+  <boolProp name="CounterConfig.per_user">true</boolProp>
+  <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
 </CounterConfig>)
         EOS
         update params

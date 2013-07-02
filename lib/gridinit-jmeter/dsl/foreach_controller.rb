@@ -19,6 +19,8 @@ module Gridinit
   <stringProp name="ForeachController.inputVal"/>
   <stringProp name="ForeachController.returnVal"/>
   <boolProp name="ForeachController.useSeparator">true</boolProp>
+  <stringProp name="ForeachController.endIndex"></stringProp>
+  <stringProp name="ForeachController.startIndex"></stringProp>
 </ForeachController>)
         EOS
         update params

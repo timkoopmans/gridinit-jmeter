@@ -17,7 +17,8 @@
         <stringProp name="CounterConfig.incr"></stringProp>
         <stringProp name="CounterConfig.name"></stringProp>
         <stringProp name="CounterConfig.format"></stringProp>
-        <boolProp name="CounterConfig.per_user">false</boolProp>
+        <boolProp name="CounterConfig.per_user">true</boolProp>
+        <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
       </CounterConfig>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
@@ -263,6 +264,8 @@
           <stringProp name="ForeachController.inputVal"></stringProp>
           <stringProp name="ForeachController.returnVal"></stringProp>
           <boolProp name="ForeachController.useSeparator">true</boolProp>
+          <stringProp name="ForeachController.endIndex"></stringProp>
+          <stringProp name="ForeachController.startIndex"></stringProp>
         </ForeachController>
         <hashTree/>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">

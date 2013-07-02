@@ -1,5 +1,5 @@
 module Gridinit
   module Jmeter
-    VERSION = "1.0.2.pre"
+    VERSION = "1.0.5"
   end
 end
