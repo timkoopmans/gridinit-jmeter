@@ -28,7 +28,7 @@ Let's create a `test` and save the related `jmx` testplan to file, so we can edi
 
 ```ruby
 test do
-  threads count: 10 do
+  threads 10 do
     visit name: 'Google Search', url: 'http://google.com'
   end
 end.jmx
@@ -60,7 +60,7 @@ The file that is created can then be executed in the JMeter GUI. If you want to 
 
 ```ruby
 test do
-  threads count: 10 do
+  threads 10 do
     visit name: 'Google Search', url: 'http://google.com'
   end
 end.jmx(file: "/tmp/my_testplan.jmx")
@@ -77,7 +77,7 @@ You can execute the JMeter test plan by calling the `run` method of the test lik
 
 ```ruby
 test do
-  threads count: 10 do
+  threads 10 do
     visit name: 'Google Search', url: 'http://google.com'
   end
 end.run
@@ -87,7 +87,7 @@ This will launch JMeter in headless (non-GUI mode) and execute the test plan. Th
 
 ```ruby
 test do
-  threads count: 10 do
+  threads 10 do
     visit name: 'Google Search', url: 'http://google.com'
   end
 end.run(
@@ -105,7 +105,7 @@ To execute the test on the Grid, call the `grid` method on the test and pass it 
 
 ```ruby
 test do  
-  threads count: 10 do
+  threads 10 do
     visit name: 'Google Search', url: 'http://google.com'
   end  
 end.grid('OxtZ-4v-v0koSz5Y0enEQQ')
@@ -127,7 +127,7 @@ Blocks let you nest methods within methods, so you can scope the execution of me
 
 ```ruby
 test do
-  threads count: 100 do
+  threads 100 do
     visit name: 'Home', url: 'http://altentee.com' do
       extract regex: "content='(.+?)' name='csrf-token'", name: 'csrf-token'
     end
@@ -146,11 +146,11 @@ All methods take a parameter hash to configure related options.
 You can use the `threads` method to define a group of users:
 
 ```ruby
-threads count: 100
-threads count: 100, continue_forever: true
-threads count: 100, loops: 10
-threads count: 100, ramup: 30, duration: 60
-threads count: 100, scheduler: true, 
+threads 100
+threads 100, continue_forever: true
+threads 100, loops: 10
+threads 100, ramup: 30, duration: 60
+threads 100, scheduler: true, 
   start_time: Time.now.to_i * 1000,
   end_time:   (Time.now.to_i * 1000) + (3600 * 1000)
 ```
