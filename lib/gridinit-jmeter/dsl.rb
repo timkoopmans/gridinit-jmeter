@@ -358,7 +358,7 @@ module Gridinit
         end
         RestClient.proxy = params[:proxy] if params[:proxy]
         begin
-          file = Tempfile.new('jmeter')
+          file = Tempfile.new(['jmeter', '.jmx'])
           file.write(doc.to_xml(:indent => 2))
           file.rewind
           response = RestClient.post "http://#{params[:endpoint] ? params[:endpoint] : 'gridinit.com'}/api?token=#{token}&region=#{params[:region]}",

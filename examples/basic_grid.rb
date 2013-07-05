@@ -5,4 +5,4 @@ test do
   threads count: 1 do
     visit name: 'Home Page', url: 'http://google.com/'
   end
-end.grid('4dy-zJLEIgpYkKe6p6JhSQ', {:region => 'ap_southeast_1'})
+end.grid('6CnGKgaTRU62LspdTFbr', {region: 'us-west-2', endpoint: '127.0.0.1:3000'})
