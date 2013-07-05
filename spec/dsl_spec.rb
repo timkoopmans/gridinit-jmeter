@@ -49,6 +49,16 @@ describe "DSL" do
     end
   end
 
+  describe 'test plan' do
+    it 'should allow to take params' do
+      test_plan = test({"TestPlan.serialize_threadgroups" => "false"}) {}
+      test_plan.to_doc.search("boolProp[@name='TestPlan.serialize_threadgroups']").text.should == "false"
+
+      test_plan = test({"TestPlan.serialize_threadgroups" => "true"}) {}
+      test_plan.to_doc.search("boolProp[@name='TestPlan.serialize_threadgroups']").text.should == "true"
+    end
+  end
+
 
   describe 'thread groups' do
     let(:doc) do

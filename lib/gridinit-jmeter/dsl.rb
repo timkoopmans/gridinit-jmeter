@@ -6,7 +6,7 @@ module Gridinit
       include Parser
       attr_accessor :root
 
-      def initialize
+      def initialize(params = {})
         @root = Nokogiri::XML(<<-EOF.strip_heredoc)
           <?xml version="1.0" encoding="UTF-8"?>
           <jmeterTestPlan version="1.2" properties="2.1">
@@ -14,7 +14,7 @@ module Gridinit
           </hashTree>
           </jmeterTestPlan>
         EOF
-        node = Gridinit::Jmeter::TestPlan.new
+        node = Gridinit::Jmeter::TestPlan.new(params)
 
         @current_node = @root.at_xpath("//jmeterTestPlan/hashTree")
         @current_node = attach_to_last(node)
@@ -418,6 +418,6 @@ module Gridinit
   end
 end
 
-def test(&block)
-  Gridinit.dsl_eval(Gridinit::Jmeter::ExtendedDSL.new, &block)
+def test(params = {}, &block)
+  Gridinit.dsl_eval(Gridinit::Jmeter::ExtendedDSL.new(params), &block)
 end
