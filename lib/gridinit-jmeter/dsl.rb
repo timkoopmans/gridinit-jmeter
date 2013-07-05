@@ -217,6 +217,8 @@ module Gridinit
 
       alias_method :bsh_pre, :beanshell_preprocessor
 
+      alias_method :bsh_post, :beanshell_postprocessor
+
       def extract(params, &block)
         node = if params[:regex]
           params[:refname] = params[:name]
