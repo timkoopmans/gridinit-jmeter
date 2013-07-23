@@ -363,19 +363,18 @@ module Gridinit
           file = Tempfile.new(['jmeter', '.jmx'])
           file.write(doc.to_xml(:indent => 2))
           file.rewind
-          response = RestClient.post "https://#{params[:endpoint] ? params[:endpoint] : 'flood.io'}/api?token=#{token}&region=#{params[:region]}",
+          response = RestClient.post "#{params[:endpoint] ? params[:endpoint] : 'https://flood.io'}/api?token=#{token}",
           {
-            :name => 'attachment',
             :attachment => File.new("#{file.path}", 'rb'),
             :results => (File.new("#{params[:jtl] ? params[:jtl] : 'jmeter.jtl'}", 'rb') if params[:region] == 'local'),
             :multipart => true,
             :content_type => 'application/octet-stream',
             :started => params[:started],
             :completed => params[:completed]
-          }
-          logger.info "Grid Results at: #{JSON.parse(response)["results"]}" if response.code == 200
+          }.merge(params)
+          logger.info "Flood results at: #{JSON.parse(response)["results"]}" if response.code == 200
         rescue => e
-          logger.fatal "There was an error: #{e.message}"
+          logger.fatal "Sorry there was an error: #{e.message}"
         end
       end
 
