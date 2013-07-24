@@ -19,4 +19,10 @@ Gem::Specification.new do |gem|
   gem.executables   << 'grid'
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ['lib']
+
+  gem.post_install_message = <<-MESSAGE
+!    The 'gridinit-jmeter' gem has been deprecated and has been replaced by 'ruby-jmeter'.
+!    See: https://rubygems.org/gems/ruby-jmeter
+!    And: https://github.com/flood-io/ruby-jmeter
+MESSAGE
 end

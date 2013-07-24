@@ -16,3 +16,6 @@ lib = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(lib + '/gridinit-jmeter/dsl/*', &method(:require))
 Dir.glob(lib + '/gridinit-jmeter/plugins/*', &method(:require))
 require 'gridinit-jmeter/dsl'
+
+warn "[DEPRECATION] This gem has been renamed to ruby-jmeter and will no longer be supported. Please switch to ruby-jmeter as soon as possible."
+
